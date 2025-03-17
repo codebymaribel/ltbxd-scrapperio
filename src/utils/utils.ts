@@ -1,3 +1,5 @@
+import nameToImdb from "name-to-imdb";
+
 /**
  * @description Checks if a string is a valid Letterboxd URL
  * @param {String} url - Letterboxd URL
@@ -13,6 +15,17 @@ export const measureFunctionTime = async (fn, args) => {
   return result;
 };
 
-export async function timeout(ms:number) {
+export async function timeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export const searchIMDB = (title: string) => {
+  return new Promise((resolve, reject) =>
+    nameToImdb(title, (err, res) => {
+      if (err) reject(err);
+      else resolve(res);
+    }),
+  )
+    .then((imdbID) => imdbID)
+    .catch(() => null);
+};

@@ -1,4 +1,4 @@
-export type FilmArrayProps = {
+export type FilmObject = {
   id: string | null;
   name: string;
   type: string;

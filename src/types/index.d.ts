@@ -1,4 +1,5 @@
 import { QUERY_RESULT_STATUS } from "../config/constants";
+import { FilmObject } from "./films";
 
 export type OptionsProps = {
   poster?: boolean;
@@ -11,6 +12,6 @@ export interface UserQueryProps {
 
 export type QueryResponseProps = {
   status: (typeof QUERY_RESULT_STATUS)[keyof typeof QUERY_RESULT_STATUS];
-  data: [];
+  data: FilmObject[] | [];
   errorMessage: string | null;
 };

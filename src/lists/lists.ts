@@ -1,33 +1,39 @@
 import * as cheerio from "cheerio";
-import { MAIN_URL } from "../config/constants";
+import { ERROR_MESSAGES, MAIN_URL, SCRAPPER_ERRORS } from "../config/constants";
 import scrapper from "../scrapper/scrapper";
-import { OptionsProps } from "../types";
-import { FilmArrayProps } from "../types/films";
+import { FilmObject } from "../types/films";
 import { searchIMDB } from "../utils/utils";
+import { ScrappedList, ListScrapperProps } from "../types/lists";
 
-type ListScrapperProps = {
-  url: string;
-  options?: OptionsProps;
-};
-
-export async function listScrapper({ url, options }: ListScrapperProps) {
+export async function listScrapper({
+  url,
+  options,
+}: ListScrapperProps): Promise<ScrappedList> {
   try {
     const initBrowser = await scrapper.launchBrowser();
 
     if (!initBrowser) {
-      return { films: [], nextPageUrl: null };
+      return {
+        films: [],
+        nextPageUrl: null,
+        error: ERROR_MESSAGES.scrapper_method_failed,
+      };
     }
 
     const htmlContent = await scrapper.getPageContent(url);
 
     if (!htmlContent?.content) {
-      return { films: [], nextPageUrl: null };
+      return {
+        films: [],
+        nextPageUrl: null,
+        error: SCRAPPER_ERRORS.missing_html_content,
+      };
     }
 
     const $ = cheerio.load(htmlContent.content);
     const filmContainers = $("div.film-poster > div").get();
 
-    const films: FilmArrayProps[] = [];
+    const films: FilmObject[] = [];
 
     for (const filmContainer of filmContainers) {
       let id: string | null;
@@ -55,13 +61,12 @@ export async function listScrapper({ url, options }: ListScrapperProps) {
     const nextPage = $("a.next").attr("href");
 
     if (!nextPage) {
-      return { films, nextPageUrl: null };
+      return { films, nextPageUrl: null, error: null };
     }
     const absoluteNextPageUrl = new URL(nextPage, MAIN_URL).href;
 
-    return { films, nextPageUrl: absoluteNextPageUrl };
+    return { films, nextPageUrl: absoluteNextPageUrl, error: null };
   } catch (error) {
-    console.error(`Error scraping ${url}:`, error);
-    return { films: [], nextPageUrl: null };
+    return { films: [], nextPageUrl: null, error: null };
   }
 }

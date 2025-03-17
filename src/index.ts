@@ -3,10 +3,10 @@ import {
   LIST_TYPES,
   MAIN_URL,
   QUERY_RESULT_STATUS,
-} from "./config/constants";
-import { listScrapper } from "./lists/lists";
-import { QueryResponseProps, UserQueryProps } from "./types";
-import { FilmArrayProps } from "./types/films";
+} from './config/constants';
+import { listScrapper } from './lists/lists';
+import { QueryResponseProps, UserQueryProps } from './types';
+import { FilmObject } from './types/films';
 
 export const getWatchlist = async ({
   username,
@@ -14,19 +14,19 @@ export const getWatchlist = async ({
     poster: false,
     IMDBID: false,
   },
-}: UserQueryProps) => {
+}: UserQueryProps): Promise<QueryResponseProps> => {
   if (!username) {
     return {
       status: QUERY_RESULT_STATUS.failed,
       data: [],
       errorMessage: ERROR_MESSAGES.missing_parameters,
-    } as QueryResponseProps;
+    };
   }
 
   let currentUrl: string | null =
     `${MAIN_URL}/${username}/${LIST_TYPES.watchlist}/`;
 
-  const allFilms: FilmArrayProps[] = [];
+  const allFilms: FilmObject[] = [];
 
   while (currentUrl) {
     const { films, nextPageUrl } = await listScrapper({
@@ -36,8 +36,6 @@ export const getWatchlist = async ({
     allFilms.push(...films);
     currentUrl = nextPageUrl;
   }
-  console.log(allFilms[allFilms.length - 1]);
-
   return {
     status: QUERY_RESULT_STATUS.ok,
     data: allFilms,
@@ -46,7 +44,7 @@ export const getWatchlist = async ({
 };
 
 getWatchlist({
-  username: "maribelbhf",
+  username: 'maribelbhf',
   options: {
     IMDBID: true,
   },

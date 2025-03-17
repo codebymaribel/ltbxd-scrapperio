@@ -1,7 +1,8 @@
 import puppeteer, { Browser, Page } from "puppeteer";
 
 import { ERROR_MESSAGES } from "../config/constants";
-import { checkIfValidURL } from "../utils/utils";
+import { checkIfValidURL, timeout } from "../utils/utils";
+import {scrollPageToBottom} from "puppeteer-autoscroll-down";
 
 class Scrapper {
   private browser: Browser | null;
@@ -45,7 +46,7 @@ class Scrapper {
     try {
       if (!this.page) return;
       const urlResponse = await this.page.goto(url, {
-        waitUntil: "domcontentloaded",
+        waitUntil: "networkidle0",
       });
 
       if (urlResponse?.status() === 404) {
@@ -54,6 +55,13 @@ class Scrapper {
           errorMessage: ERROR_MESSAGES.page_not_found,
         };
       }
+      
+     await scrollPageToBottom(this.page, {
+        size: 300,
+        delay: 200
+        })
+
+      await timeout(5000);
 
       const htmlContent = await this.page.content();
 
@@ -98,5 +106,7 @@ class Scrapper {
     }
   }
 }
+
+
 
 export default new Scrapper();

@@ -2,7 +2,8 @@
   "name": "letterboxd-scrapper",
   "version": "1.0.0",
   "description": "A public lists scrapper for letterboxd lists",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
   "author": "",
   "license": "ISC",
   "scripts": {

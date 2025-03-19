@@ -1,9 +1,9 @@
 import * as cheerio from "cheerio";
 import { ERROR_MESSAGES, MAIN_URL, SCRAPPER_ERRORS } from "../config/constants";
 import scrapper from "../scrapper/scrapper";
-import { FilmObject } from "../types/films";
+import { FilmObject } from "../../types/films";
 import { searchIMDB } from "../utils/utils";
-import { ScrappedList, ListScrapperProps } from "../types/lists";
+import { ScrappedList, ListScrapperProps } from "../../types/lists";
 
 export async function listScrapper({
   url,

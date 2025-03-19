@@ -5,8 +5,16 @@ import {
   QUERY_RESULT_STATUS,
 } from './config/constants';
 import { listScrapper } from './lists/lists';
-import { QueryResponseProps, UserQueryProps } from './types';
-import { FilmObject } from './types/films';
+import { QueryResponseProps, UserQueryProps } from '../types';
+import { FilmObject } from '../types/films';
+
+/**
+ * @summary Gets user watchlist
+ * @description This function returns an array of objects with user's watchlist films data.
+ * @param {string} username - Letterboxd username
+ * @param {object} options - Query {@link https://github.com/codebymaribel/ltbxd-scrapper?tab=readme-ov-file#options-object| Options Object}
+ * @returns {object}  {@link https://github.com/codebymaribel/ltbxd-scrapper?tab=readme-ov-file#film-object | Film Object[]} in the data param of the {@link https://github.com/codebymaribel/ltbxd-scrapper?tab=readme-ov-file#options-object | QueryResponseProps}
+ */
 
 export const getWatchlist = async ({
   username,
@@ -42,10 +50,3 @@ export const getWatchlist = async ({
     errorMessage: null,
   };
 };
-
-getWatchlist({
-  username: 'maribelbhf',
-  options: {
-    IMDBID: true,
-  },
-});

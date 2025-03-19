@@ -6,6 +6,7 @@
       "rootDir": "./src" /* Specify the root folder within your source files. */,
       "outDir": "./dist",
       "declaration": true,
+      "declarationDir": "./dist/types",
       "declarationMap": true /* Allow 'import x from y' when a module doesn't have a default export. */ /* Specify a set of entries that re-map imports to additional lookup locations. */,
       "esModuleInterop": true /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */,
       "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
@@ -16,7 +17,7 @@
       "noUnusedLocals": true,
       "skipLibCheck": true /* Skip type checking all .d.ts files. */
     },
-    "include": ["src/**/*.ts"],
+    "include": ["src/**/*.ts", "types/**/*"],
     "exclude": ["node_modules", "dist"]
   }
   

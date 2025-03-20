@@ -46,7 +46,7 @@ export async function listScrapper({
       const type = "movie";
 
       if (options?.IMDBID) {
-        id = (await searchIMDB(name)) as string;
+        id = await searchIMDB(name)
       } else {
         id = null;
       }

@@ -1,4 +1,4 @@
-import nameToImdb from "name-to-imdb";
+import nameToImdb from 'name-to-imdb';
 
 /**
  * @description Checks if a string is a valid Letterboxd URL
@@ -6,12 +6,12 @@ import nameToImdb from "name-to-imdb";
  * @returns {Promise}
  */
 export const checkIfValidURL = (url: string) =>
-  url.toLowerCase().includes("https://letterboxd.com");
+  url.toLowerCase().includes('https://letterboxd.com');
 
 export const measureFunctionTime = async (fn, args) => {
-  console.time("Function execution time");
+  console.time('Function execution time');
   const result = await fn(args);
-  console.timeEnd("Function execution time");
+  console.timeEnd('Function execution time');
   return result;
 };
 
@@ -19,13 +19,11 @@ export async function timeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export const searchIMDB = (title: string) => {
+export const searchIMDB = async (title: string): Promise<string> => {
   return new Promise((resolve, reject) =>
     nameToImdb(title, (err, res) => {
       if (err) reject(err);
       else resolve(res);
     }),
-  )
-    .then((imdbID) => imdbID)
-    .catch(() => null);
+  );
 };

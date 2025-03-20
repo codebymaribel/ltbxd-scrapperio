@@ -1,5 +1,5 @@
 {
-  "name": "letterboxd-scrapper",
+  "name": "ltbxdscrapper",
   "version": "1.0.0",
   "description": "A public lists scrapper for letterboxd lists",
   "main": "./dist/index.js",
@@ -13,21 +13,21 @@
     "build": "tsc"
   },
   "dependencies": {
-    "cheerio": "^1.0.0",
-    "name-to-imdb": "^3.0.4",
-    "puppeteer": "^24.4.0",
-    "puppeteer-autoscroll-down": "^2.0.0"
+    "cheerio":  "1.0.0",
+    "name-to-imdb":  "3.0.4",
+    "puppeteer":  "24.4.0",
+    "puppeteer-autoscroll-down":  "2.0.0"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-    "@types/cheerio": "^0.22.35",
-    "@types/node": "^22.13.10",
-    "eslint": "^9.22.0",
-    "eslint-plugin-unused-imports": "^4.1.4",
-    "nodemon": "^3.1.9",
-    "prettier": "^3.5.3",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1"
+    "@trivago/prettier-plugin-sort-imports":  "5.2.2",
+    "@types/cheerio":  "0.22.35",
+    "@types/node":  "22.13.10",
+    "eslint":  "9.22.0",
+    "eslint-plugin-unused-imports":  "4.1.4",
+    "nodemon":  "3.1.9",
+    "prettier":  "3.5.3",
+    "ts-node":  "10.9.2",
+    "typescript":  "5.8.2",
+    "typescript-eslint":  "8.26.1"
   }
 }

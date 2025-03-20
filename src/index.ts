@@ -1,3 +1,5 @@
+import { QueryResponseProps, UserQueryProps } from '../types';
+import { FilmObject } from '../types/films';
 import {
   ERROR_MESSAGES,
   LIST_TYPES,
@@ -5,22 +7,20 @@ import {
   QUERY_RESULT_STATUS,
 } from './config/constants';
 import { listScrapper } from './lists/lists';
-import { QueryResponseProps, UserQueryProps } from '../types';
-import { FilmObject } from '../types/films';
 
 /**
  * @summary Gets user watchlist
  * @description This function returns an array of objects with user's watchlist films data.
  * @param {string} username - Letterboxd username
- * @param {object} options - Query {@link https://github.com/codebymaribel/ltbxd-scrapper?tab=readme-ov-file#options-object| Options Object}
- * @returns {object}  {@link https://github.com/codebymaribel/ltbxd-scrapper?tab=readme-ov-file#film-object | Film Object[]} in the data param of the {@link https://github.com/codebymaribel/ltbxd-scrapper?tab=readme-ov-file#options-object | QueryResponseProps}
+ * @param {object} options - OptionsProps
+ * @returns {object}  QueryResponseProps
  */
 
 export const getWatchlist = async ({
   username,
   options = {
-    poster: false,
-    IMDBID: false,
+    poster: true,
+    IMDBID: true,
   },
 }: UserQueryProps): Promise<QueryResponseProps> => {
   if (!username) {
@@ -44,6 +44,7 @@ export const getWatchlist = async ({
     allFilms.push(...films);
     currentUrl = nextPageUrl;
   }
+
   return {
     status: QUERY_RESULT_STATUS.ok,
     data: allFilms,

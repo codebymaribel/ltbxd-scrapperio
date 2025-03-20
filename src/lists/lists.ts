@@ -57,6 +57,7 @@ export async function listScrapper({
         poster = null;
       }
       films.push({ id, name, type, poster });
+      if(films.length === options?.max) break;
     }
     const nextPage = $("a.next").attr("href");
 

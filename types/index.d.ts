@@ -4,6 +4,7 @@ import { FilmObject } from "./films";
 export type OptionsProps = {
   poster?: boolean;
   IMDBID?: boolean;
+  max?: number;
 };
 export interface UserQueryProps {
   username: string;

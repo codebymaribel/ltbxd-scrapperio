@@ -19,8 +19,8 @@ import { listScrapper } from './lists/lists';
 export const getWatchlist = async ({
   username,
   options = {
-    poster: true,
     IMDBID: true,
+    poster: true,
   },
 }: UserQueryProps): Promise<QueryResponseProps> => {
   if (!username) {
@@ -31,6 +31,13 @@ export const getWatchlist = async ({
     };
   }
 
+  let options_selected = options;
+
+  if (options && !('IMDBID' in options))
+    Object.assign(options_selected, { IMDBID: true });
+  if (options && !('poster' in options))
+    Object.assign(options_selected, { poster: true });
+
   let currentUrl: string | null =
     `${MAIN_URL}/${username}/${LIST_TYPES.watchlist}/`;
 
@@ -39,9 +46,13 @@ export const getWatchlist = async ({
   while (currentUrl) {
     const { films, nextPageUrl } = await listScrapper({
       url: currentUrl,
-      options,
+      options: options_selected,
     });
     allFilms.push(...films);
+    if (allFilms.length === options?.max) {
+      currentUrl = null;
+      break;
+    }
     currentUrl = nextPageUrl;
   }
 

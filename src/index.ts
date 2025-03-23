@@ -6,7 +6,7 @@ import {
   MAIN_URL,
   QUERY_RESULT_STATUS,
 } from './config/constants';
-import { listScrapper } from './lists/lists';
+import listScrapper  from './lists/listScrapper';
 
 /**
  * @summary Gets user watchlist

@@ -5,7 +5,7 @@ import { FilmObject } from "../../types/films";
 import { searchIMDB } from "../utils/utils";
 import { ScrappedList, ListScrapperProps } from "../../types/lists";
 
-export async function listScrapper({
+export default async function listScrapper({
   url,
   options,
 }: ListScrapperProps): Promise<ScrappedList> {

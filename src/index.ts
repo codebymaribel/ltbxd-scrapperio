@@ -6,7 +6,7 @@ import {
   MAIN_URL,
   QUERY_RESULT_STATUS,
 } from './config/constants';
-import listScrapper  from './lists/listScrapper';
+import listScrapper from './lists/listScrapper';
 
 /**
  * @summary Gets user watchlist
@@ -42,18 +42,31 @@ export const getWatchlist = async ({
     `${MAIN_URL}/${username}/${LIST_TYPES.watchlist}/`;
 
   const allFilms: FilmObject[] = [];
+  let triggeredError: string | null = null;
 
   while (currentUrl) {
-    const { films, nextPageUrl } = await listScrapper({
+    const { films, nextPageUrl, error } = await listScrapper({
       url: currentUrl,
       options: options_selected,
     });
+
     allFilms.push(...films);
-    if (allFilms.length === options?.max) {
+    if (allFilms.length === options?.max || error) {
+      if (error) {
+        triggeredError = error;
+      }
       currentUrl = null;
       break;
     }
     currentUrl = nextPageUrl;
+  }
+
+  if (triggeredError) {
+    return {
+      status: QUERY_RESULT_STATUS.error,
+      data: allFilms,
+      errorMessage: triggeredError,
+    };
   }
 
   return {

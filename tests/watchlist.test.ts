@@ -5,6 +5,7 @@ import {
   QUERY_RESULT_STATUS,
 } from '../src/config/constants';
 import { getWatchlist } from '../src/index';
+import listScrapper from '../src/lists/listScrapper';
 
 // Mock the listScrapper function
 jest.mock('../src/lists/listScrapper', () => ({
@@ -126,5 +127,28 @@ describe('getWatchlist max films logic', () => {
         poster: 'http://example.com/poster2.jpg',
       },
     ]);
+  });
+});
+
+describe('getWatchlist error handling', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('Should handle errors from listScrapper', async () => {
+    // Override the mock to throw an error JUST for this test
+    (listScrapper as jest.Mock).mockImplementation(() =>
+      Promise.resolve({
+        films: [],
+        nextPageUrl: null,
+        error: ERROR_MESSAGES.scrapper_method_failed,
+      }),
+    );
+
+    const result = await getWatchlist({ username: 'testuser' });
+
+    expect(result.status).toBe(QUERY_RESULT_STATUS.error);
+    expect(result.errorMessage).toBe(ERROR_MESSAGES.scrapper_method_failed);
+    expect(result.data.length).toBe(0);
   });
 });

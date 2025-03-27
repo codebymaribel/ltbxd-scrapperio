@@ -7,6 +7,9 @@ const config: Config.InitialOptions = {
   collectCoverage: true, // Enable code coverage
   coverageDirectory: "coverage", // Output coverage reports to the `coverage` folder
   verbose: true, // Show detailed test results
+  moduleNameMapper: {
+    'puppeteer-autoscroll-down': '<rootDir>/tests/mocks/puppeteer-autoscroll-down.ts',
+  }
 };
 
 export default config;

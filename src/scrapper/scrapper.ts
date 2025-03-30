@@ -3,11 +3,9 @@ import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
 
 import { ERROR_MESSAGES } from '../config/constants';
 import { checkIfValidURL, timeout } from '../utils/utils';
+import { PageContentResponse } from '../../types/scrapper';
 
-type PageContentResponse = {
-  errorMessage: string | null;
-  content: null | string;
-};
+
 class Scrapper {
   private browser: Browser | null;
   private page: Page | null;

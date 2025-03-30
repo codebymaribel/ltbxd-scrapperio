@@ -1,9 +1,13 @@
-import puppeteer, { Browser, Page } from "puppeteer";
+import puppeteer, { Browser, ElementHandle, Page } from 'puppeteer';
+import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
 
-import { ERROR_MESSAGES } from "../config/constants";
-import { checkIfValidURL, timeout } from "../utils/utils";
-import {scrollPageToBottom} from "puppeteer-autoscroll-down";
+import { ERROR_MESSAGES } from '../config/constants';
+import { checkIfValidURL, timeout } from '../utils/utils';
 
+type PageContentResponse = {
+  errorMessage: string | null;
+  content: null | string;
+};
 class Scrapper {
   private browser: Browser | null;
   private page: Page | null;
@@ -14,26 +18,22 @@ class Scrapper {
   }
 
   async launchBrowser(): Promise<boolean> {
-    try {
-      this.browser = await puppeteer.launch({
-        headless: true,
-        args: [
-          "--no-sandbox",
-          "--disable-setuid-sandbox",
-          "--disable-dev-shm-usage",
-        ],
-      });
-      this.page = await this.browser?.newPage();
+    this.browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+      ],
+    });
+    if (!this.browser) return false;
+    this.page = await this.browser.newPage();
 
-      if (this.page && this.browser) return true;
-      else return false;
-    } catch (error) {
-      console.log(ERROR_MESSAGES.scrapper_method_failed);
-      return false;
-    }
+    if (!this.page) return false;
+    else return true;
   }
 
-  async getPageContent(url: string) {
+  async getPageContent(url: string): Promise<PageContentResponse> {
     const isTheURLValid = checkIfValidURL(url);
 
     if (!isTheURLValid) {
@@ -43,10 +43,16 @@ class Scrapper {
       };
     }
 
+    if (!this.page) {
+      return {
+        content: null,
+        errorMessage: ERROR_MESSAGES.page_not_found,
+      };
+    }
+
     try {
-      if (!this.page) return;
       const urlResponse = await this.page.goto(url, {
-        waitUntil: "networkidle0",
+        waitUntil: 'networkidle0',
       });
 
       if (urlResponse?.status() === 404) {
@@ -55,11 +61,11 @@ class Scrapper {
           errorMessage: ERROR_MESSAGES.page_not_found,
         };
       }
-      
-     await scrollPageToBottom(this.page, {
+
+      await scrollPageToBottom(this.page, {
         size: 300,
-        delay: 200
-        })
+        delay: 200,
+      });
 
       await timeout(5000);
 
@@ -70,8 +76,6 @@ class Scrapper {
         errorMessage: null,
       };
     } catch (error) {
-      if (!this.browser) return;
-      await this.browser.close();
       return {
         content: null,
         errorMessage: `${ERROR_MESSAGES.scrapper_method_failed} - ${error}`,
@@ -79,34 +83,24 @@ class Scrapper {
     }
   }
 
-  async closeBrowser() {
+  async closeBrowser(): Promise<boolean> {
     try {
-      if (!this.page) return;
+      if (!this.page) return true;
       await this.page.browser().close();
-      console.log("browser closed");
       return true;
     } catch (error) {
-      console.log("Error closing browser");
       return false;
     }
   }
 
-  async checkIfSelectorExists(selector: string) {
-    try {
-      if (!this.page) return;
-      const doesSelectorExists = await this.page
-        .waitForSelector(selector, { timeout: 1000 })
-        .then(() => true)
-        .catch(() => false);
+  async checkIfSelectorExists(selector: string): Promise<ElementHandle | null> {
+    if (!this.page) return null;
+    const doesSelectorExists = await this.page.waitForSelector(selector, {
+      timeout: 1000,
+    });
 
-      return doesSelectorExists;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
+    return doesSelectorExists;
   }
 }
-
-
 
 export default new Scrapper();

@@ -8,7 +8,7 @@ const config: Config.InitialOptions = {
   coverageDirectory: "coverage", // Output coverage reports to the `coverage` folder
   verbose: true, // Show detailed test results
   moduleNameMapper: {
-    'puppeteer-autoscroll-down': '<rootDir>/tests/mocks/puppeteer-autoscroll-down.ts',
+    'puppeteer-autoscroll-down': '<rootDir>/tests/__mocks__/puppeteer-autoscroll-down.ts',
   }
 };
 

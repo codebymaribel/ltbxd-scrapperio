@@ -24,6 +24,7 @@ export default async function listScrapper({
     const htmlContent = await scrapper.getPageContent(url);
 
     if (!htmlContent?.content) {
+      await scrapper.closeBrowser();
       return {
         films: [],
         nextPageUrl: null,
@@ -64,6 +65,7 @@ export default async function listScrapper({
     const nextPage = $('a.next').attr('href');
 
     if (!nextPage) {
+      await scrapper.closeBrowser();
       return { films, nextPageUrl: null, error: null };
     }
     const absoluteNextPageUrl = new URL(nextPage, MAIN_URL).href;

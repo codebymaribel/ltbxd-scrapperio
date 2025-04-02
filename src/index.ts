@@ -1,11 +1,13 @@
-import { QueryResponseProps, UserQueryProps } from '../types';
+import { QueryResponseProps, UserListsProps, UserQueryProps } from '../types';
 import { FilmObject } from '../types/films';
+import { ListCoverObject } from '../types/lists';
 import {
   ERROR_MESSAGES,
   LIST_TYPES,
   MAIN_URL,
   QUERY_RESULT_STATUS,
 } from './config/constants';
+import userLists from './lists/UserLists';
 import listScrapper from './lists/listScrapper';
 
 /**
@@ -75,3 +77,85 @@ export const getWatchlist = async ({
     errorMessage: null,
   };
 };
+
+/**
+ * @summary Gets user lists
+ * @description This function returns an array of objects with user's lists data.
+ * @param {string} username - Letterboxd username
+ * @param {object} options - OptionsProps
+ * @returns {object}  QueryResponseProps
+ */
+
+export const getUserLists = async ({
+  username,
+  options = {
+    coverPosters: true,
+    summary: true,
+  },
+}: UserListsProps): Promise<QueryResponseProps> => {
+  if (!username) {
+    return {
+      status: QUERY_RESULT_STATUS.failed,
+      data: [],
+      errorMessage: ERROR_MESSAGES.missing_parameters,
+    };
+  }
+
+  let options_selected = options;
+
+  if (options && !('coverPosters' in options))
+    Object.assign(options_selected, { coverPosters: true });
+  if (options && !('summary' in options))
+    Object.assign(options_selected, { summary: true });
+
+  let currentUrl: string | null =
+    `${MAIN_URL}/${username}/${LIST_TYPES.lists}/`;
+
+  const allLists: ListCoverObject[] = [];
+  let triggeredError: string | null = null;
+
+  while (currentUrl) {
+    const { lists, nextPageUrl, error } = await userLists({
+      url: currentUrl,
+      options: options_selected,
+    });
+
+    allLists.push(...lists);
+    if (allLists.length === options?.max || error) {
+      if (error) {
+        triggeredError = error;
+      }
+      currentUrl = null;
+      break;
+    }
+    currentUrl = nextPageUrl;
+  }
+
+  console.log(allLists);
+  if (triggeredError) {
+    return {
+      status: QUERY_RESULT_STATUS.error,
+      data: allLists,
+      errorMessage: triggeredError,
+    };
+  }
+
+  return {
+    status: QUERY_RESULT_STATUS.error,
+    data: allLists,
+    errorMessage: null,
+  };
+};
+
+// getWatchlist({
+//   username: 'luciacoronado_',
+//   options: {
+//     max: 10,
+//     IMDBID: false,
+//     poster: false,
+//   },
+// });
+
+// getUserLists({ username: 'zoerosebryant' });
+
+getUserLists({ username: 'maribelbhf' });

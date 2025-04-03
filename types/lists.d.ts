@@ -1,9 +1,14 @@
-import { OptionsProps } from '.';
+import { OptionsProps, UserListsOptions } from '.';
 import { FilmObject } from './films';
 
 export type ListScrapperProps = {
   url: string;
   options?: OptionsProps;
+};
+
+export type UserListsProps = {
+  url: string;
+  options?: UserListsOptions;
 };
 
 export type ScrappedList = {
@@ -21,6 +26,7 @@ export type ScrappedLists = {
 export type ListCoverObject = {
   title: string;
   summary?: string | null;
-  coverPosters?: string[] | null;
+  amount?: string | null;
+  posters?: string[] | null;
   url: string;
 };

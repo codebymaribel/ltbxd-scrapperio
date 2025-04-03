@@ -2,7 +2,7 @@ import * as cheerio from 'cheerio';
 
 import {
   ListCoverObject,
-  ListScrapperProps,
+  UserListsProps,
   ScrappedLists,
 } from '../../types/lists';
 import { ERROR_MESSAGES, MAIN_URL, SCRAPPER_ERRORS } from '../config/constants';
@@ -11,7 +11,7 @@ import scrapper from '../scrapper/scrapper';
 export default async function userLists({
   url,
   options,
-}: ListScrapperProps): Promise<ScrappedLists> {
+}: UserListsProps): Promise<ScrappedLists> {
   try {
     const initBrowser = await scrapper.launchBrowser();
 
@@ -42,15 +42,16 @@ export default async function userLists({
 
     for (const listSection of listContainers) {
       let summary: string | null = null;
-      let coverPosters: string[] | null = null;
+      let posters: string[] | null = null;
 
       const $listSection = $(listSection);
       const title = $listSection.find('div.film-list-summary > h2 > a').text();
+      const amount = $listSection.find('div.film-list-summary > p > small').text();
       const url = MAIN_URL + $listSection.find('a').attr('href') || '';
 
       //@ts-ignore index not used
-      if (options?.coverPosters) {
-        coverPosters = $listSection
+      if (options?.posters) {
+        posters = $listSection
           .find('a > ul > li')
           //@ts-ignore aa
           .map((index, el) => $(el).find('div > img').attr('src'))
@@ -62,7 +63,7 @@ export default async function userLists({
           $listSection.find('div.film-list-summary > div > p').text() || null;
       }
 
-      lists.push({ title, summary, url, coverPosters });
+      lists.push({ title, summary, amount, url, posters });
     }
 
     const nextPage = $('a.next').attr('href');

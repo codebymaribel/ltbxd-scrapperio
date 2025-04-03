@@ -6,9 +6,8 @@ export type OptionsProps = {
   poster?: boolean;
   IMDBID?: boolean;
   max?: number;
-  summary?: boolean;
-  coverPosters?: boolean;
 };
+
 export interface UserQueryProps {
   username: string;
   options?: OptionsProps;
@@ -20,7 +19,14 @@ export type QueryResponseProps = {
   errorMessage: string | null;
 };
 
+export type UserListsOptions = {
+  posters?: boolean;
+  summary?: boolean;
+  amount?: boolean;
+  max?: number;
+};
+
 export type UserListsProps = {
   username: string;
-  options?: OptionsProps;
+  options?: UserListsOptions;
 };

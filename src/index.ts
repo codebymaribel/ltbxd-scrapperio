@@ -89,8 +89,9 @@ export const getWatchlist = async ({
 export const getUserLists = async ({
   username,
   options = {
-    coverPosters: true,
+    posters: true,
     summary: true,
+    amount: true,
   },
 }: UserListsProps): Promise<QueryResponseProps> => {
   if (!username) {
@@ -103,10 +104,12 @@ export const getUserLists = async ({
 
   let options_selected = options;
 
-  if (options && !('coverPosters' in options))
-    Object.assign(options_selected, { coverPosters: true });
+  if (options && !('posters' in options))
+    Object.assign(options_selected, { posters: true });
   if (options && !('summary' in options))
     Object.assign(options_selected, { summary: true });
+  if (options && !('amount' in options))
+    Object.assign(options_selected, { amount: true });
 
   let currentUrl: string | null =
     `${MAIN_URL}/${username}/${LIST_TYPES.lists}/`;
@@ -131,7 +134,6 @@ export const getUserLists = async ({
     currentUrl = nextPageUrl;
   }
 
-  console.log(allLists);
   if (triggeredError) {
     return {
       status: QUERY_RESULT_STATUS.error,
@@ -158,4 +160,9 @@ export const getUserLists = async ({
 
 // getUserLists({ username: 'zoerosebryant' });
 
-getUserLists({ username: 'maribelbhf' });
+getUserLists({
+  username: 'maribelbhf',
+  options: {
+    amount: false,
+  },
+});

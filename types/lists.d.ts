@@ -8,6 +8,7 @@ export type ListScrapperProps = {
 
 export type UserListsProps = {
   url: string;
+  totalItems?: number;
   options?: UserListsOptions;
 };
 

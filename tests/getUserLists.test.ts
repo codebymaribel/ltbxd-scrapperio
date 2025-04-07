@@ -5,7 +5,7 @@ import {
   MAIN_URL,
   QUERY_RESULT_STATUS,
 } from '../src/config/constants';
-import userLists from '../src/lists/UserLists';
+import userListsScrapper from '../src/lists/UserLists';
 
 // Mock the listScrapper function
 jest.mock('../src/lists/UserLists', () => ({
@@ -134,9 +134,9 @@ describe('Checking errors...', () => {
     expect(result.errorMessage).toBe(ERROR_MESSAGES.missing_parameters);
   });
 
-  it('Should handle errors from userLists', async () => {
+  it('Should handle errors from userListsScrapper', async () => {
     // Override the mock to throw an error JUST for this test
-    (userLists as jest.Mock).mockImplementation(() =>
+    (userListsScrapper as jest.Mock).mockImplementation(() =>
       Promise.resolve({
         lists: [],
         nextPageUrl: null,

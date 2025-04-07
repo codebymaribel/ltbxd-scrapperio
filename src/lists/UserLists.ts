@@ -8,9 +8,10 @@ import {
 import { ERROR_MESSAGES, MAIN_URL, SCRAPPER_ERRORS } from '../config/constants';
 import scrapper from '../scrapper/scrapper';
 
-export default async function userLists({
+export default async function userListsScrapper({
   url,
   options,
+  totalItems = 0,
 }: UserListsProps): Promise<ScrappedLists> {
   try {
     const initBrowser = await scrapper.launchBrowser();
@@ -37,10 +38,15 @@ export default async function userLists({
 
     const $ = cheerio.load(htmlContent.content);
     const listContainers = $('section.list').get();
+    let currentLength = totalItems
 
     const lists: ListCoverObject[] = [];
 
     for (const listSection of listContainers) {
+      console.log(options?.max, currentLength)
+      if (options?.max === currentLength) {
+        break;
+      }
       let summary: string | null = null;
       let posters: string[] | null = null;
       let amount: string | null = null;
@@ -69,9 +75,11 @@ export default async function userLists({
       }
 
       lists.push({ title, summary, amount, url, posters });
+      currentLength++;
     }
 
-    const nextPage = $('a.next').attr('href');
+    let nextPage: string | undefined | null = null;
+    if (totalItems !== options?.max) nextPage = $('a.next').attr('href');
 
     if (!nextPage) {
       await scrapper.closeBrowser();

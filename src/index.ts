@@ -12,7 +12,7 @@ import {
   MAIN_URL,
   QUERY_RESULT_STATUS,
 } from './config/constants';
-import userLists from './lists/UserLists';
+import userListsScrapper from './lists/UserLists';
 import listScrapper from './lists/listScrapper';
 
 /**
@@ -58,10 +58,10 @@ export const getWatchlist = async ({
     });
 
     allFilms.push(...films);
-
     const isMaxReached = allFilms.length === options?.max;
 
     if (isMaxReached) {
+      console.log('max reached');
       currentUrl = null;
       break;
     } else if (error) {
@@ -130,8 +130,9 @@ export const getUserLists = async ({
   let triggeredError: string | null = null;
 
   while (currentUrl) {
-    const { lists, nextPageUrl, error } = await userLists({
+    const { lists, nextPageUrl, error } = await userListsScrapper({
       url: currentUrl,
+      totalItems: allLists.length,
       options: options_selected,
     });
 
@@ -169,7 +170,7 @@ export const getUserLists = async ({
 // getWatchlist({
 //   username: 'luciacoronado_',
 //   options: {
-//     max: 10,
+//     max: 3,
 //     IMDBID: false,
 //     poster: false,
 //   },
@@ -178,5 +179,8 @@ export const getUserLists = async ({
 // getUserLists({ username: 'zoerosebryant' });
 
 getUserLists({
-  username: 'maribelbhf',
+  username: 'zoerosebryant',
+  options: {
+    max: 15,
+  },
 });

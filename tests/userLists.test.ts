@@ -1,5 +1,5 @@
 import { ERROR_MESSAGES, MAIN_URL } from '../src/config/constants';
-import userLists from '../src/lists/UserLists';
+import userListsScrapper from '../src/lists/UserLists';
 import scrapper from '../src/scrapper/scrapper';
 import { lists_html, lists_html_wo_next } from './__mocks__/lists_mocks';
 
@@ -19,7 +19,7 @@ const options = {
 //@ts-expect-error mockResolvedValue is not present on type and triggers ts error
 scrapper.launchBrowser.mockResolvedValue(scrapper_response);
 
-describe('userLists returns OK with lists', () => {
+describe('userListsScrapper returns OK with lists', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -28,12 +28,31 @@ describe('userLists returns OK with lists', () => {
     //@ts-expect-error mockResolvedValue is not present on type and triggers ts error
     scrapper.getPageContent.mockResolvedValue(getPage_dummy);
 
-    const { lists, nextPageUrl, error } = await userLists({
+    const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
       options,
     });
 
     expect(lists).toHaveLength(5);
+    expect(nextPageUrl).toBe(MAIN_URL + '/page2');
+    expect(error).toBeNull();
+  });
+
+  it('Should return lists array a max of 2 lists', async () => {
+    //@ts-expect-error mockResolvedValue is not present on type and triggers ts error
+    scrapper.getPageContent.mockResolvedValue(getPage_dummy);
+
+    const { lists, nextPageUrl, error } = await userListsScrapper({
+      url: 'testURL',
+      options: {
+        posters: true,
+        summary: true,
+        amount: true,
+        max: 2,
+      },
+    });
+
+    expect(lists).toHaveLength(2);
     expect(nextPageUrl).toBe(MAIN_URL + '/page2');
     expect(error).toBeNull();
   });
@@ -45,7 +64,7 @@ describe('userLists returns OK with lists', () => {
       errorMessage: ERROR_MESSAGES.not_valid_url,
     });
 
-    const { lists, nextPageUrl, error } = await userLists({
+    const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
       options,
     });
@@ -62,7 +81,7 @@ describe('Checking options...', () => {
   });
 
   it('Should return lists array without posters', async () => {
-    const { lists, nextPageUrl, error } = await userLists({
+    const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
       options: {
         posters: false,
@@ -84,7 +103,7 @@ describe('Checking options...', () => {
   });
 
   it('Should return lists array without summary', async () => {
-    const { lists, nextPageUrl, error } = await userLists({
+    const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
       options: {
         posters: true,
@@ -106,7 +125,7 @@ describe('Checking options...', () => {
   });
 
   it('Should return lists array without amount', async () => {
-    const { lists, nextPageUrl, error } = await userLists({
+    const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
       options: {
         posters: true,
@@ -138,7 +157,7 @@ describe('Checking errors...', () => {
     //@ts-expect-error mockResolvedValue is not present on type and triggers ts error
     scrapper.getPageContent.mockResolvedValue(getPage_content);
 
-    const { lists, nextPageUrl, error } = await userLists({
+    const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
       options,
     });
@@ -153,7 +172,7 @@ describe('Checking errors...', () => {
     //@ts-ignore
     scrapper.launchBrowser.mockResolvedValue(scrapper_response);
 
-    const { lists, nextPageUrl, error } = await userLists({
+    const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
       options,
     });

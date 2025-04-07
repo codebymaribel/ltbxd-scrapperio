@@ -2,8 +2,8 @@ import * as cheerio from 'cheerio';
 
 import {
   ListCoverObject,
-  UserListsProps,
   ScrappedLists,
+  UserListsProps,
 } from '../../types/lists';
 import { ERROR_MESSAGES, MAIN_URL, SCRAPPER_ERRORS } from '../config/constants';
 import scrapper from '../scrapper/scrapper';
@@ -43,10 +43,11 @@ export default async function userLists({
     for (const listSection of listContainers) {
       let summary: string | null = null;
       let posters: string[] | null = null;
+      let amount: string | null = null;
 
       const $listSection = $(listSection);
       const title = $listSection.find('div.film-list-summary > h2 > a').text();
-      const amount = $listSection.find('div.film-list-summary > p > small').text();
+
       const url = MAIN_URL + $listSection.find('a').attr('href') || '';
 
       //@ts-ignore index not used
@@ -61,6 +62,10 @@ export default async function userLists({
       if (options?.summary) {
         summary =
           $listSection.find('div.film-list-summary > div > p').text() || null;
+      }
+
+      if (options?.amount) {
+        amount = $listSection.find('div.film-list-summary > p > small').text();
       }
 
       lists.push({ title, summary, amount, url, posters });

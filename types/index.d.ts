@@ -13,9 +13,15 @@ export interface UserQueryProps {
   options?: OptionsProps;
 }
 
-export type QueryResponseProps = {
+export type FilmsResponseProps = {
   status: (typeof QUERY_RESULT_STATUS)[keyof typeof QUERY_RESULT_STATUS];
-  data: FilmObject[] | ListCoverObject[] | [];
+  data: FilmObject[] | [];
+  errorMessage: string | null;
+};
+
+export type ListsResponseProps = {
+  status: (typeof QUERY_RESULT_STATUS)[keyof typeof QUERY_RESULT_STATUS];
+  data: ListCoverObject[] | [];
   errorMessage: string | null;
 };
 

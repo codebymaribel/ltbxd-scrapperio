@@ -1,4 +1,4 @@
-import { QueryResponseProps, UserListsProps, UserQueryProps } from '../types';
+import { FilmsResponseProps, ListsResponseProps, UserListsProps, UserQueryProps } from '../types';
 import { FilmObject } from '../types/films';
 import { ListCoverObject } from '../types/lists';
 import {
@@ -15,7 +15,7 @@ import listScrapper from './lists/listScrapper';
  * @description This function returns an array of objects with user's watchlist films data.
  * @param {string} username - Letterboxd username
  * @param {object} options - OptionsProps
- * @returns {object}  QueryResponseProps
+ * @returns {object}  FilmsResponseProps
  */
 
 export const getWatchlist = async ({
@@ -24,7 +24,7 @@ export const getWatchlist = async ({
     IMDBID: true,
     poster: true,
   },
-}: UserQueryProps): Promise<QueryResponseProps> => {
+}: UserQueryProps): Promise<FilmsResponseProps> => {
   if (!username) {
     return {
       status: QUERY_RESULT_STATUS.failed,
@@ -83,7 +83,7 @@ export const getWatchlist = async ({
  * @description This function returns an array of objects with user's lists data.
  * @param {string} username - Letterboxd username
  * @param {object} options - OptionsProps
- * @returns {object}  QueryResponseProps
+ * @returns {object}  FilmsResponseProps
  */
 
 export const getUserLists = async ({
@@ -93,7 +93,7 @@ export const getUserLists = async ({
     summary: true,
     amount: true,
   },
-}: UserListsProps): Promise<QueryResponseProps> => {
+}: UserListsProps): Promise<ListsResponseProps> => {
   if (!username) {
     return {
       status: QUERY_RESULT_STATUS.failed,
@@ -161,8 +161,5 @@ export const getUserLists = async ({
 // getUserLists({ username: 'zoerosebryant' });
 
 getUserLists({
-  username: 'maribelbhf',
-  options: {
-    amount: false,
-  },
+  username: 'maribelbhf'
 });

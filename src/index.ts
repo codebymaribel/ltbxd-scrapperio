@@ -1,4 +1,9 @@
-import { FilmsResponseProps, ListsResponseProps, UserListsProps, UserQueryProps } from '../types';
+import {
+  FilmsResponseProps,
+  ListsResponseProps,
+  UserListsProps,
+  UserQueryProps,
+} from '../types';
 import { FilmObject } from '../types/films';
 import { ListCoverObject } from '../types/lists';
 import {
@@ -53,13 +58,20 @@ export const getWatchlist = async ({
     });
 
     allFilms.push(...films);
-    if (allFilms.length === options?.max || error) {
+
+    const isMaxReached = allFilms.length === options?.max;
+
+    if (isMaxReached) {
+      currentUrl = null;
+      break;
+    } else if (error) {
       if (error) {
         triggeredError = error;
       }
       currentUrl = null;
       break;
     }
+
     currentUrl = nextPageUrl;
   }
 
@@ -124,7 +136,12 @@ export const getUserLists = async ({
     });
 
     allLists.push(...lists);
-    if (allLists.length === options?.max || error) {
+    const isMaxReached = allLists.length === options?.max;
+
+    if (isMaxReached) {
+      currentUrl = null;
+      break;
+    } else if (error) {
       if (error) {
         triggeredError = error;
       }
@@ -161,5 +178,5 @@ export const getUserLists = async ({
 // getUserLists({ username: 'zoerosebryant' });
 
 getUserLists({
-  username: 'maribelbhf'
+  username: 'maribelbhf',
 });

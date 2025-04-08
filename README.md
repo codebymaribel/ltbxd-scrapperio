@@ -25,12 +25,12 @@ A scrapper for Letterboxd public lists.
 npm install ltbxdscrapper
 ```
 
-
 ### :wrench: Functions
 
 Here's the list of available functions in this package:
 
 #### getWatchlist
+
 ```javascript
 // Require letterboxd scrapper library
 import {getWatchlist} from 'ltbxdscrapper';
@@ -59,20 +59,77 @@ const userwatchlist = await getWatchlist({
 }
 ```
 
- :warning: **Note:** Posters and IMDBID are true by default. If you don't wish these values then use the [Options Object](https://github.com/codebymaribel/ltbxd-scrapperio/blob/develop/types/index.d.ts) in the query.
+:warning: **Note:** Posters and IMDBID are true by default. If you don't wish these values then use the [Options Object](https://github.com/codebymaribel/ltbxd-scrapperio/blob/develop/types/index.d.ts) in the query.
 
+#### getUserLists
+
+```javascript
+// Require letterboxd scrapper library
+import {getUserLists} from 'ltbxdscrapper';
+
+const userLists = await getUserLists({username: 'maribelbhf',
+options:{
+    posters: true,
+    summary: true,
+    amount: true,
+    max: 5
+}});
+
+// userLists returns:
+
+{
+  status: 'OK',
+  data: [
+    {
+      title: 'Movie list 1',
+      summary: 'This is the summary',
+      amount: '27 films',
+      url: 'https://letterboxd.com/username/list/peliculitas-para-asustarnos-de-manera-uteana/',
+      posters: [    'https://a.ltrbxd.com/resized/sm/upload/um/45/8m/or/t0c3qxcKSaO4iBYVAzIeyPbC8I1-0-70-0-105-crop.jpg?v=72ab2e2ec7',
+                  'https://a.ltrbxd.com/resized/film-poster/7/7/4/4/5/4/774454-crush-0-70-0-105-crop.jpg?v=fc5422620b',
+                  'https://a.ltrbxd.com/resized/film-poster/2/4/0/3/4/4/240344-la-la-land-0-70-0-105-crop.jpg?v=053670ff84',
+                  'https://a.ltrbxd.com/resized/sm/upload/jn/np/vd/8h/qxUKbHFaqC0PYKITLERnt5fmuBg-0-70-0-105-crop.jpg?v=47f413d784',
+                  'https://a.ltrbxd.com/resized/film-poster/5/1/9/7/0/51970-before-sunset-0-70-0-105-crop.jpg?v=059bc2bbc0',
+               ]
+    },
+    {
+      title: 'Movie list 2',
+      summary: null,
+      amount: '80 films',
+      url: 'https://letterboxd.com/username/list/si-me-pides-que-elija-una-pelicula-seria/',
+      posters: [    'https://a.ltrbxd.com/resized/sm/upload/um/45/8m/or/t0c3qxcKSaO4iBYVAzIeyPbC8I1-0-70-0-105-crop.jpg?v=72ab2e2ec7',
+                  'https://a.ltrbxd.com/resized/film-poster/7/7/4/4/5/4/774454-crush-0-70-0-105-crop.jpg?v=fc5422620b',
+                  'https://a.ltrbxd.com/resized/film-poster/2/4/0/3/4/4/240344-la-la-land-0-70-0-105-crop.jpg?v=053670ff84',
+                  'https://a.ltrbxd.com/resized/sm/upload/jn/np/vd/8h/qxUKbHFaqC0PYKITLERnt5fmuBg-0-70-0-105-crop.jpg?v=47f413d784',
+                  'https://a.ltrbxd.com/resized/film-poster/5/1/9/7/0/51970-before-sunset-0-70-0-105-crop.jpg?v=059bc2bbc0',
+               ]
+    },
+    {
+      title: 'Movie list 3',
+      summary: null,
+      amount: '2 films',
+      url: 'https://letterboxd.com/username/list/country-stories/',
+      posters: [    'https://a.ltrbxd.com/resized/sm/upload/um/45/8m/or/t0c3qxcKSaO4iBYVAzIeyPbC8I1-0-70-0-105-crop.jpg?v=72ab2e2ec7',
+                  'https://a.ltrbxd.com/resized/film-poster/7/7/4/4/5/4/774454-crush-0-70-0-105-crop.jpg?v=fc5422620b',
+                  'https://a.ltrbxd.com/resized/film-poster/2/4/0/3/4/4/240344-la-la-land-0-70-0-105-crop.jpg?v=053670ff84',
+                  'https://a.ltrbxd.com/resized/sm/upload/jn/np/vd/8h/qxUKbHFaqC0PYKITLERnt5fmuBg-0-70-0-105-crop.jpg?v=47f413d784',
+                  'https://a.ltrbxd.com/resized/film-poster/5/1/9/7/0/51970-before-sunset-0-70-0-105-crop.jpg?v=059bc2bbc0',
+               ]
+    }
+  ],
+  errorMessage: null
+}
+```
+
+:warning: **Note:** Posters, Summary and Amount are true by default. If you don't wish these values then use the [Options Object](https://github.com/codebymaribel/ltbxd-scrapperio/blob/develop/types/index.d.ts) in the query.
 
 ### :memo: Types
 
 For more info about the types please refer to the [types ](./src/types)
 
-
-
 ### 🤝 Contributing
 
 > todo
-
-
 
 ### 🎖 License
 

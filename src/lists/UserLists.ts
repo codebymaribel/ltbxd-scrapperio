@@ -38,12 +38,11 @@ export default async function userListsScrapper({
 
     const $ = cheerio.load(htmlContent.content);
     const listContainers = $('section.list').get();
-    let currentLength = totalItems
+    let currentLength = totalItems;
 
     const lists: ListCoverObject[] = [];
 
     for (const listSection of listContainers) {
-      console.log(options?.max, currentLength)
       if (options?.max === currentLength) {
         break;
       }

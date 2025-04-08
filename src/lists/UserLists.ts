@@ -43,7 +43,6 @@ export default async function userListsScrapper({
     const lists: ListCoverObject[] = [];
 
     for (const listSection of listContainers) {
-      console.log(options?.max, currentLength)
       if (options?.max === currentLength) {
         break;
       }

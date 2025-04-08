@@ -61,7 +61,6 @@ export const getWatchlist = async ({
     const isMaxReached = allFilms.length === options?.max;
 
     if (isMaxReached) {
-      console.log('max reached');
       currentUrl = null;
       break;
     } else if (error) {
@@ -166,21 +165,3 @@ export const getUserLists = async ({
     errorMessage: null,
   };
 };
-
-// getWatchlist({
-//   username: 'luciacoronado_',
-//   options: {
-//     max: 3,
-//     IMDBID: false,
-//     poster: false,
-//   },
-// });
-
-// getUserLists({ username: 'zoerosebryant' });
-
-getUserLists({
-  username: 'zoerosebryant',
-  options: {
-    max: 15,
-  },
-});

@@ -23,7 +23,7 @@ searchIMDB.mockResolvedValue(dummyid);
 //@ts-expect-error mockResolvedValue is not present on type and triggers ts error
 scrapper.launchBrowser.mockResolvedValue(scrapper_response);
 
-describe('listScrapper test', () => {
+describe('listScrapper', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -63,9 +63,27 @@ describe('listScrapper test', () => {
     expect(nextPageUrl).toBeNull();
     expect(error).toBeNull();
   });
+
+  it('Should return 2 films max', async () => {
+    //@ts-expect-error mockResolvedValue is not present on type and triggers ts error
+    scrapper.getPageContent.mockResolvedValue(getPage_dummy);
+
+    const { films, nextPageUrl, error } = await listScrapper({
+      url: 'testURL',
+      options:{
+        IMDBID: true,
+        poster: true,
+        max: 2
+      }
+    });
+
+    expect(films).toHaveLength(2);
+    expect(nextPageUrl).toBe(MAIN_URL + '/page2');
+    expect(error).toBeNull();
+  });
 });
 
-describe('listScrapper options logic', () => {
+describe('Checking options...', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -109,7 +127,7 @@ describe('listScrapper options logic', () => {
   });
 });
 
-describe('listScrapper error handling', () => {
+describe('Checking errors...', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });

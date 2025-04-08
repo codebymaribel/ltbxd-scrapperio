@@ -9,6 +9,7 @@ import { searchIMDB } from '../utils/utils';
 export default async function listScrapper({
   url,
   options,
+  totalItems = 0,
 }: ListScrapperProps): Promise<ScrappedList> {
   try {
     const initBrowser = await scrapper.launchBrowser();
@@ -38,7 +39,12 @@ export default async function listScrapper({
 
     const films: FilmObject[] = [];
 
+    let currentLength = totalItems;
+
     for (const filmContainer of filmContainers) {
+      if (options?.max === currentLength) {
+        break;
+      }
       let id: string | null;
       let poster: string | null;
 
@@ -62,7 +68,8 @@ export default async function listScrapper({
       films.push({ id, name, type, poster });
       if (films.length === options?.max) break;
     }
-    const nextPage = $('a.next').attr('href');
+    let nextPage: string | undefined | null = null;
+    if (totalItems !== options?.max) nextPage = $('a.next').attr('href');
 
     if (!nextPage) {
       await scrapper.closeBrowser();

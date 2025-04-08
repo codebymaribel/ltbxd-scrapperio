@@ -47,6 +47,7 @@ export const getWatchlist = async ({
   while (currentUrl) {
     const { films, nextPageUrl, error } = await listScrapper({
       url: currentUrl,
+      totalItems: allFilms.length,
       options: options_selected,
     });
 

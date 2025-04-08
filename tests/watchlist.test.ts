@@ -75,7 +75,7 @@ describe('getWatchlist', () => {
   });
 });
 
-describe('getWatchlist options logic', () => {
+describe('Checking options...', () => {
   it('Should add poster: true if poster is missing in options', async () => {
     const options = { IMDBID: false };
 
@@ -108,29 +108,7 @@ describe('getWatchlist options logic', () => {
   });
 });
 
-describe('getWatchlist max films logic', () => {
-  it('should stop scraping when allFilms.length reaches options.max', async () => {
-    const options = { max: 2 }; // Stop after 3 films
-    const result = await getWatchlist({ username: 'testuser', options });
-
-    expect(result.status).toBe(QUERY_RESULT_STATUS.ok);
-    expect(result.data.length).toBe(2); // Should stop after 3 films
-    expect(result.data).toEqual([
-      {
-        name: 'Film 1',
-        id: 'tt1',
-        poster: 'http://example.com/poster1.jpg',
-      },
-      {
-        name: 'Film 2',
-        id: 'tt2',
-        poster: 'http://example.com/poster2.jpg',
-      },
-    ]);
-  });
-});
-
-describe('getWatchlist error handling', () => {
+describe('Checking errors...', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });

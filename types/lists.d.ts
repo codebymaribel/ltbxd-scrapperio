@@ -3,6 +3,7 @@ import { FilmObject } from "./films";
 
 export type ListScrapperProps = {
   url: string;
+  totalItems?: number;
   options?: OptionsProps;
 };
 

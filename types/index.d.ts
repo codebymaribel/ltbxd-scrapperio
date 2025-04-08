@@ -36,3 +36,8 @@ export type UserListsProps = {
   username: string;
   options?: UserListsOptions;
 };
+
+export type ListProps = {
+  url: string;
+  options?: OptionsProps
+}

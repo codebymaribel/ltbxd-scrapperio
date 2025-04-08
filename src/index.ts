@@ -1,5 +1,6 @@
 import {
   FilmsResponseProps,
+  ListProps,
   ListsResponseProps,
   UserListsProps,
   UserQueryProps,
@@ -162,6 +163,79 @@ export const getUserLists = async ({
   return {
     status: QUERY_RESULT_STATUS.error,
     data: allLists,
+    errorMessage: null,
+  };
+};
+
+/**
+ * @summary Gets user watchlist
+ * @description This function returns an array of objects with user's watchlist films data.
+ * @param {string} username - Letterboxd username
+ * @param {object} options - OptionsProps
+ * @returns {object}  FilmsResponseProps
+ */
+
+export const getListFilms = async ({
+  url,
+  options = {
+    IMDBID: true,
+    poster: true,
+  },
+}: ListProps): Promise<FilmsResponseProps> => {
+  if (!url) {
+    return {
+      status: QUERY_RESULT_STATUS.failed,
+      data: [],
+      errorMessage: ERROR_MESSAGES.missing_parameters,
+    };
+  }
+
+  let options_selected = options;
+
+  if (options && !('IMDBID' in options))
+    Object.assign(options_selected, { IMDBID: true });
+  if (options && !('poster' in options))
+    Object.assign(options_selected, { poster: true });
+
+  let currentUrl: string | null = url;
+
+  const allFilms: FilmObject[] = [];
+  let triggeredError: string | null = null;
+
+  while (currentUrl) {
+    const { films, nextPageUrl, error } = await listScrapper({
+      url: currentUrl,
+      options: options_selected,
+    });
+
+    allFilms.push(...films);
+    const isMaxReached = allFilms.length === options?.max;
+
+    if (isMaxReached) {
+      currentUrl = null;
+      break;
+    } else if (error) {
+      if (error) {
+        triggeredError = error;
+      }
+      currentUrl = null;
+      break;
+    }
+
+    currentUrl = nextPageUrl;
+  }
+
+  if (triggeredError) {
+    return {
+      status: QUERY_RESULT_STATUS.error,
+      data: allFilms,
+      errorMessage: triggeredError,
+    };
+  }
+
+  return {
+    status: QUERY_RESULT_STATUS.ok,
+    data: allFilms,
     errorMessage: null,
   };
 };

@@ -29,7 +29,7 @@ npm install ltbxdscrapper
 
 Here's the list of available functions in this package:
 
-#### getWatchlist
+### getWatchlist
 
 ```javascript
 // Require letterboxd scrapper library
@@ -61,7 +61,7 @@ const userwatchlist = await getWatchlist({
 
 :warning: **Note:** Posters and IMDBID are true by default. If you don't wish these values then use the [Options Object](https://github.com/codebymaribel/ltbxd-scrapperio/blob/develop/types/index.d.ts) in the query.
 
-#### getUserLists
+### getUserLists
 
 ```javascript
 // Require letterboxd scrapper library
@@ -122,6 +122,38 @@ options:{
 ```
 
 :warning: **Note:** Posters, Summary and Amount are true by default. If you don't wish these values then use the [Options Object](https://github.com/codebymaribel/ltbxd-scrapperio/blob/develop/types/index.d.ts) in the query.
+
+### getWatchlist
+
+```javascript
+// Require letterboxd scrapper library
+import {getWatchlist} from 'ltbxdscrapper';
+
+const listfilms = await getListFilms({
+  url: "http://testurl.com", // Required
+  options: {
+    poster: true,
+    IMDBID: true,
+  }, // Optional
+});
+
+// listfilms returns:
+
+{
+    status: 'OK',
+    data: [
+        {
+            id: '50602',
+            title: 'Persepolis',
+            slug: 'persepolis',
+            poster: 'https://a.ltrbxd.com/resized/sm/upload/28/um/1t/jq/dYvyF1RlNokAd1N7Nek0vDpYsV6-0-125-0-187-crop.jpg?v=fc5d71c744'
+        }
+    ],
+    errorMessage: null,
+}
+```
+
+:warning: **Note:** Posters and IMDBID are true by default. If you don't wish these values then use the [Options Object](https://github.com/codebymaribel/ltbxd-scrapperio/blob/develop/types/index.d.ts) in the query.
 
 ### :memo: Types
 

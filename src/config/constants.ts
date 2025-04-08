@@ -23,6 +23,9 @@ export const QUERY_RESULT_STATUS = {
   error: 'ERROR',
 };
 
+export const SCRAPPER_ERRORS = {
+  missing_html_content : 'NO HTML CONTENT FOUND'
+}
 export const ERROR_MESSAGES = {
   missing_parameters: 'INCOMPLETE PARAMETERS',
   not_valid_url: 'YOU NEED TO SUBMIT A VALID LETTERBOXD URL',

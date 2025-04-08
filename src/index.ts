@@ -1,11 +1,18 @@
-import { QueryResponseProps, UserQueryProps } from '../types';
+import {
+  FilmsResponseProps,
+  ListsResponseProps,
+  UserListsProps,
+  UserQueryProps,
+} from '../types';
 import { FilmObject } from '../types/films';
+import { ListCoverObject } from '../types/lists';
 import {
   ERROR_MESSAGES,
   LIST_TYPES,
   MAIN_URL,
   QUERY_RESULT_STATUS,
 } from './config/constants';
+import userListsScrapper from './lists/UserLists';
 import listScrapper from './lists/listScrapper';
 
 /**
@@ -13,7 +20,7 @@ import listScrapper from './lists/listScrapper';
  * @description This function returns an array of objects with user's watchlist films data.
  * @param {string} username - Letterboxd username
  * @param {object} options - OptionsProps
- * @returns {object}  QueryResponseProps
+ * @returns {object}  FilmsResponseProps
  */
 
 export const getWatchlist = async ({
@@ -22,7 +29,7 @@ export const getWatchlist = async ({
     IMDBID: true,
     poster: true,
   },
-}: UserQueryProps): Promise<QueryResponseProps> => {
+}: UserQueryProps): Promise<FilmsResponseProps> => {
   if (!username) {
     return {
       status: QUERY_RESULT_STATUS.failed,
@@ -52,13 +59,19 @@ export const getWatchlist = async ({
     });
 
     allFilms.push(...films);
-    if (allFilms.length === options?.max || error) {
+    const isMaxReached = allFilms.length === options?.max;
+
+    if (isMaxReached) {
+      currentUrl = null;
+      break;
+    } else if (error) {
       if (error) {
         triggeredError = error;
       }
       currentUrl = null;
       break;
     }
+
     currentUrl = nextPageUrl;
   }
 
@@ -75,4 +88,83 @@ export const getWatchlist = async ({
     data: allFilms,
     errorMessage: null,
   };
+
 };
+
+/**
+ * @summary Gets user lists
+ * @description This function returns an array of objects with user's lists data.
+ * @param {string} username - Letterboxd username
+ * @param {object} options - OptionsProps
+ * @returns {object}  FilmsResponseProps
+ */
+
+export const getUserLists = async ({
+  username,
+  options = {
+    posters: true,
+    summary: true,
+    amount: true,
+  },
+}: UserListsProps): Promise<ListsResponseProps> => {
+  if (!username) {
+    return {
+      status: QUERY_RESULT_STATUS.failed,
+      data: [],
+      errorMessage: ERROR_MESSAGES.missing_parameters,
+    };
+  }
+
+  let options_selected = options;
+
+  if (options && !('posters' in options))
+    Object.assign(options_selected, { posters: true });
+  if (options && !('summary' in options))
+    Object.assign(options_selected, { summary: true });
+  if (options && !('amount' in options))
+    Object.assign(options_selected, { amount: true });
+
+  let currentUrl: string | null =
+    `${MAIN_URL}/${username}/${LIST_TYPES.lists}/`;
+
+  const allLists: ListCoverObject[] = [];
+  let triggeredError: string | null = null;
+
+  while (currentUrl) {
+    const { lists, nextPageUrl, error } = await userListsScrapper({
+      url: currentUrl,
+      totalItems: allLists.length,
+      options: options_selected,
+    });
+
+    allLists.push(...lists);
+    const isMaxReached = allLists.length === options?.max;
+
+    if (isMaxReached) {
+      currentUrl = null;
+      break;
+    } else if (error) {
+      if (error) {
+        triggeredError = error;
+      }
+      currentUrl = null;
+      break;
+    }
+    currentUrl = nextPageUrl;
+  }
+
+  if (triggeredError) {
+    return {
+      status: QUERY_RESULT_STATUS.error,
+      data: allLists,
+      errorMessage: triggeredError,
+    };
+  }
+
+  return {
+    status: QUERY_RESULT_STATUS.error,
+    data: allLists,
+    errorMessage: null,
+  };
+};
+

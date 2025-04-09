@@ -11,7 +11,7 @@ import { full_list_html } from './__mocks__/watchlist_mock';
 
 jest.mock('puppeteer');
 
-const testValidURL = `${MAIN_URL}+/testurl`;
+const testValidURL = `${MAIN_URL}+/testurl+/list`;
 
 describe('launchBrowser function', () => {
   beforeEach(() => {
@@ -38,7 +38,7 @@ describe('getPageContent function', () => {
   });
 
   it('Should return content as null & errorMessage as URL not valid', async () => {
-    const response = await scrapper.getPageContent('testurl');
+    const response = await scrapper.getPageContent('testurl', 'list');
 
     expect(response?.content).toBeNull();
     expect(response?.errorMessage).toBe(ERROR_MESSAGES.not_valid_url);
@@ -49,7 +49,7 @@ describe('getPageContent function', () => {
     puppeteer.launch.mockResolvedValue(puppeteerPageNull);
     await scrapper.launchBrowser();
 
-    const response = await scrapper.getPageContent(testValidURL);
+    const response = await scrapper.getPageContent(testValidURL, 'list');
 
     expect(response?.content).toBeNull();
     expect(response?.errorMessage).toBe(ERROR_MESSAGES.page_not_found);
@@ -60,7 +60,7 @@ describe('getPageContent function', () => {
     puppeteer.launch.mockResolvedValue(puppeteerPage404);
     await scrapper.launchBrowser();
 
-    const response = await scrapper.getPageContent(testValidURL);
+    const response = await scrapper.getPageContent(testValidURL, 'list');
 
     expect(response?.content).toBeNull();
     expect(response?.errorMessage).toBe(ERROR_MESSAGES.page_not_found);
@@ -70,7 +70,7 @@ describe('getPageContent function', () => {
     //@ts-expect-error mockResolvedValue is not present on type and triggers ts error
     puppeteer.launch.mockResolvedValue(puppeteerBrowserOK);
     await scrapper.launchBrowser();
-    const response = await scrapper.getPageContent(testValidURL);
+    const response = await scrapper.getPageContent(testValidURL, 'list');
 
     expect(response?.content).toBe(full_list_html);
     expect(response?.errorMessage).toBe(null);

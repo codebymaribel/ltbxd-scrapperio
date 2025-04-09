@@ -5,13 +5,13 @@ jest.mock('name-to-imdb');
 
 describe('checkIfValidURL', () => {
   it('Should return true if string includes MAIN_URL', () => {
-    const test = checkIfValidURL(MAIN_URL + '/test');
+    const test = checkIfValidURL(MAIN_URL + '/list/test', 'list');
 
     expect(test).toBeTruthy();
   });
 
   it('Should return false if string doesnt include MAIN_URL', () => {
-    const test = checkIfValidURL('/test');
+    const test = checkIfValidURL('/test', 'list');
 
     expect(test).toBeFalsy();
   });

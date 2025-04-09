@@ -37,8 +37,9 @@ describe('listScrapper test', () => {
     //@ts-expect-error mockResolvedValue is not present on type and triggers ts error
     scrapper.getPageContent.mockResolvedValue(getPage_dummy);
 
-    const { films, nextPageUrl, error } = await listScrapper({
+    const { films, nextPageUrl, error } = await await listScrapper({
       url: 'testURL',
+      contentType: 'list',
       options,
     });
 
@@ -54,8 +55,9 @@ describe('listScrapper test', () => {
     };
     //@ts-expect-error mockResolvedValue is not present on type and triggers ts error
     scrapper.getPageContent.mockResolvedValue(getPage_withoutnext);
-    const { films, nextPageUrl, error } = await listScrapper({
+    const { films, nextPageUrl, error } = await await listScrapper({
       url: 'testURL',
+      contentType: 'list',
       options,
     });
 
@@ -79,8 +81,9 @@ describe('listScrapper options logic', () => {
       poster: true,
     };
 
-    const { films, nextPageUrl, error } = await listScrapper({
+    const { films, nextPageUrl, error } = await await listScrapper({
       url: 'testURL',
+      contentType: 'list',
       options,
     });
 
@@ -98,8 +101,9 @@ describe('listScrapper options logic', () => {
       poster: false,
     };
 
-    const { films, nextPageUrl, error } = await listScrapper({
+    const { films, nextPageUrl, error } = await await listScrapper({
       url: 'testURL',
+      contentType: 'list',
       options,
     });
 
@@ -127,8 +131,9 @@ describe('listScrapper error handling', () => {
     //@ts-expect-error mockResolvedValue is not present on type and triggers ts error
     scrapper.getPageContent.mockResolvedValue(getPage_content);
 
-    const { films, nextPageUrl, error } = await listScrapper({
+    const { films, nextPageUrl, error } = await await listScrapper({
       url: 'testURL',
+      contentType: 'list',
       options,
     });
 
@@ -143,8 +148,9 @@ describe('listScrapper error handling', () => {
     //@ts-expect-error mockResolvedValue is not present on type and triggers ts error
     scrapper.launchBrowser.mockResolvedValue(scrapper_response);
 
-    const { films, nextPageUrl, error } = await listScrapper({
+    const { films, nextPageUrl, error } = await await listScrapper({
       url: 'testURL',
+      contentType: 'list',
       options,
     });
 

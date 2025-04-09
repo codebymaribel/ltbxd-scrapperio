@@ -30,6 +30,7 @@ describe('userListsScrapper returns OK with lists', () => {
 
     const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
+      contentType: 'lists',
       options,
     });
 
@@ -44,6 +45,7 @@ describe('userListsScrapper returns OK with lists', () => {
 
     const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
+      contentType: 'lists',
       options: {
         posters: true,
         summary: true,
@@ -66,6 +68,7 @@ describe('userListsScrapper returns OK with lists', () => {
 
     const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
+      contentType: 'lists',
       options,
     });
 
@@ -83,6 +86,7 @@ describe('Checking options...', () => {
   it('Should return lists array without posters', async () => {
     const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
+      contentType: 'lists',
       options: {
         posters: false,
         summary: true,
@@ -105,6 +109,7 @@ describe('Checking options...', () => {
   it('Should return lists array without summary', async () => {
     const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
+      contentType: 'lists',
       options: {
         posters: true,
         summary: false,
@@ -127,6 +132,7 @@ describe('Checking options...', () => {
   it('Should return lists array without amount', async () => {
     const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
+      contentType: 'lists',
       options: {
         posters: true,
         summary: true,
@@ -159,6 +165,7 @@ describe('Checking errors...', () => {
 
     const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
+      contentType: 'lists',
       options,
     });
 
@@ -174,6 +181,7 @@ describe('Checking errors...', () => {
 
     const { lists, nextPageUrl, error } = await userListsScrapper({
       url: 'testURL',
+      contentType: 'lists',
       options,
     });
 

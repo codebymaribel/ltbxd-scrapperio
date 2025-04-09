@@ -94,8 +94,8 @@ export const getWatchlist = async ({
  * @summary Gets user lists
  * @description This function returns an array of objects with user's lists data.
  * @param {string} username - Letterboxd username
- * @param {object} options - OptionsProps
- * @returns {object}  FilmsResponseProps
+ * @param {object} options - UserListsProps
+ * @returns {object}  ListsResponseProps
  */
 
 export const getUserLists = async ({
@@ -168,10 +168,10 @@ export const getUserLists = async ({
 };
 
 /**
- * @summary Gets user watchlist
- * @description This function returns an array of objects with user's watchlist films data.
- * @param {string} username - Letterboxd username
- * @param {object} options - OptionsProps
+ * @summary Gets list films based on list url
+ * @description This function returns an array of objects with list films data.
+ * @param {string} url - Letterboxd list url
+ * @param {object} options - ListProps
  * @returns {object}  FilmsResponseProps
  */
 

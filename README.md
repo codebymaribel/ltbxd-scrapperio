@@ -123,11 +123,11 @@ options:{
 
 :warning: **Note:** Posters, Summary and Amount are true by default. If you don't wish these values then use the [Options Object](https://github.com/codebymaribel/ltbxd-scrapperio/blob/develop/types/index.d.ts) in the query.
 
-### getWatchlist
+### getListFilms
 
 ```javascript
 // Require letterboxd scrapper library
-import {getWatchlist} from 'ltbxdscrapper';
+import {getListFilms} from 'ltbxdscrapper';
 
 const listfilms = await getListFilms({
   url: "http://testurl.com", // Required

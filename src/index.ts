@@ -55,6 +55,7 @@ export const getWatchlist = async ({
   while (currentUrl) {
     const { films, nextPageUrl, error } = await listScrapper({
       url: currentUrl,
+      contentType: 'watchlist',
       options: options_selected,
     });
 
@@ -133,6 +134,7 @@ export const getUserLists = async ({
     const { lists, nextPageUrl, error } = await userListsScrapper({
       url: currentUrl,
       totalItems: allLists.length,
+      contentType: 'lists',
       options: options_selected,
     });
 
@@ -161,7 +163,7 @@ export const getUserLists = async ({
   }
 
   return {
-    status: QUERY_RESULT_STATUS.error,
+    status: QUERY_RESULT_STATUS.ok,
     data: allLists,
     errorMessage: null,
   };
@@ -205,6 +207,7 @@ export const getListFilms = async ({
   while (currentUrl) {
     const { films, nextPageUrl, error } = await listScrapper({
       url: currentUrl,
+      contentType: 'list',
       options: options_selected,
     });
 

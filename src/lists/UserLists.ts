@@ -11,6 +11,7 @@ import scrapper from '../scrapper/scrapper';
 export default async function userListsScrapper({
   url,
   options,
+  contentType,
   totalItems = 0,
 }: UserListsProps): Promise<ScrappedLists> {
   try {
@@ -24,7 +25,7 @@ export default async function userListsScrapper({
       };
     }
 
-    const htmlContent = await scrapper.getPageContent(url);
+    const htmlContent = await scrapper.getPageContent(url, contentType);
 
     if (!htmlContent?.content) {
       await scrapper.closeBrowser();

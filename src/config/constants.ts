@@ -12,7 +12,8 @@ export const MAIN_URL = 'https://letterboxd.com';
 export const LIST_TYPES = {
   watchlist: 'watchlist',
   films: 'films',
-  lists: 'lists',
+  list: 'list',
+  lists: 'lists'
 };
 
 export const QUERY_RESULT_STATUS = {

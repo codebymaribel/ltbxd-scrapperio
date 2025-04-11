@@ -2,10 +2,12 @@ import {
   FilmsResponseProps,
   ListProps,
   ListsResponseProps,
+  SearchProps,
+  SearchResponseProps,
   UserListsProps,
   UserQueryProps,
 } from '../types';
-import { FilmObject } from '../types/films';
+import { FilmObject, FilmSearchObject } from '../types/films';
 import { ListCoverObject } from '../types/lists';
 import {
   ERROR_MESSAGES,
@@ -15,6 +17,7 @@ import {
 } from './config/constants';
 import userListsScrapper from './lists/UserLists';
 import listScrapper from './lists/listScrapper';
+import { searchScrapper } from './lists/searchScrapper';
 
 /**
  * @summary Gets user watchlist
@@ -242,3 +245,77 @@ export const getListFilms = async ({
     errorMessage: null,
   };
 };
+
+export const searchFilm = async ({
+  title,
+  options = {
+    poster: true,
+    alternativeTitles: true,
+    director: true,
+  },
+}: SearchProps): Promise<SearchResponseProps> => {
+  if (!title) {
+    return {
+      status: QUERY_RESULT_STATUS.failed,
+      data: [],
+      errorMessage: ERROR_MESSAGES.missing_parameters,
+    };
+  }
+
+  let options_selected = options;
+
+  if (options && !('poster' in options))
+    Object.assign(options_selected, { poster: true });
+  if (options && !('alternativeTitles' in options))
+    Object.assign(options_selected, { alternativeTitles: true });
+
+  if (options && !('director' in options))
+    Object.assign(options_selected, { director: true });
+
+  let formattedQuery = title.replace(" ", "+");
+  let searchquery: string | null = `${MAIN_URL}/search/films/${formattedQuery}/`;
+
+  const allFilms: FilmSearchObject[] = [];
+
+  let triggeredError: string | null = null;
+
+  while (searchquery) {
+    const { films, nextPageUrl, error } = await searchScrapper({
+      url: searchquery,
+      contentType: 'search',
+      options: options_selected,
+    });
+
+    allFilms.push(...films);
+    const isMaxReached = allFilms.length === options?.max;
+
+    if (isMaxReached) {
+      searchquery = null;
+      break;
+    } else if (error) {
+      if (error) {
+        triggeredError = error;
+      }
+      searchquery = null;
+      break;
+    }
+
+    searchquery = nextPageUrl;
+  }
+
+  if (triggeredError) {
+    return {
+      status: QUERY_RESULT_STATUS.error,
+      data: allFilms,
+      errorMessage: triggeredError,
+    };
+  }
+
+  return {
+    status: QUERY_RESULT_STATUS.ok,
+    data: allFilms,
+    errorMessage: null,
+  };
+};
+
+

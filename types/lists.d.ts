@@ -1,7 +1,7 @@
 import { OptionsProps, UserListsOptions } from '.';
 import { FilmObject } from './films';
 
-export type PageContentType = 'watchlist' | 'films' | 'list' | 'lists';
+export type PageContentType = 'watchlist' | 'films' | 'list' | 'lists' | 'search';
 
 export type ListScrapperProps = {
   url: string;

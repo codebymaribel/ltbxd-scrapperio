@@ -1,6 +1,7 @@
 import { QUERY_RESULT_STATUS } from '../config/constants';
-import { FilmObject } from './films';
+import { FilmObject, FilmSearchObject } from './films';
 import { ListCoverObject } from './lists';
+import { SearchOptions } from './search';
 
 export type OptionsProps = {
   poster?: boolean;
@@ -25,6 +26,12 @@ export type ListsResponseProps = {
   errorMessage: string | null;
 };
 
+export type SearchResponseProps = {
+  status: (typeof QUERY_RESULT_STATUS)[keyof typeof QUERY_RESULT_STATUS];
+  data: FilmSearchObject[] | [];
+  errorMessage: string | null;
+};
+
 export type UserListsOptions = {
   posters?: boolean;
   summary?: boolean;
@@ -40,4 +47,9 @@ export type UserListsProps = {
 export type ListProps = {
   url: string;
   options?: OptionsProps
+}
+
+export type SearchProps = {
+  title: string;
+  options?: SearchOptions;
 }

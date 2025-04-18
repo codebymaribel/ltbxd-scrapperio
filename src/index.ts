@@ -317,21 +317,3 @@ export const searchFilm = async ({
     errorMessage: null,
   };
 };
-
-async function testing() {
-  // const watchRes = await getWatchlist({ username: 'maribelbhf' });
-  // const userRes = await getUserLists({ username: 'maribelbhf' });
-  // const listRes = await getListFilms({
-  //   url: 'https://letterboxd.com/zoerosebryant/list/best-supporting-actor-winners-ranked/',
-  //   options: { max: 3 },
-  // });
-  // console.log(watchRes);
-  // console.log(userRes);
-  // console.log(listRes);
-
-  // const res = await searchFilm({ title: 'harry potter', options: { max: 5 } });
-
-  // console.log(res.data)
-}
-
-testing();

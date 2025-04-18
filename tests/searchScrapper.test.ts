@@ -3,9 +3,6 @@ import { searchScrapper } from '../src/lists/searchScrapper';
 import scrapper from '../src/scrapper/scrapper';
 import { search_html, search_html_next } from './__mocks__/search_mocks';
 
-// import { QUERY_RESULT_STATUS } from '../src/config/constants';
-// import { searchScrapper } from '../src/lists/searchScrapper';
-
 jest.mock('../src/scrapper/scrapper');
 
 const scrapper_response = true;
@@ -22,12 +19,12 @@ const options = {
 //@ts-expect-error mockResolvedValue is not present on type and triggers ts error
 scrapper.launchBrowser.mockResolvedValue(scrapper_response);
 
-describe('searchFilm should return OK and lists populated in data', () => {
+describe('searchScrapper should return OK and lists populated in data', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('Should return a list of lists based on a valid letterboxd username', async () => {
+  it('Should return a list of lists based on a valid letterboxd list URL', async () => {
     //@ts-expect-error mockResolvedValue is not present on type and triggers ts error
     scrapper.launchBrowser.mockResolvedValue(scrapper_response);
     //@ts-expect-error mockResolvedValue is not present on type and triggers ts error

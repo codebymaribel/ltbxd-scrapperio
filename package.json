@@ -11,6 +11,8 @@
     "format": "prettier --write .",
     "lint": "eslint src",
     "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
     "build": "tsc"
   },
   "dependencies": {

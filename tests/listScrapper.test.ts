@@ -39,6 +39,7 @@ describe('listScrapper', () => {
 
     const { films, nextPageUrl, error } = await listScrapper({
       url: 'testURL',
+      contentType: 'list',
       options,
     });
 
@@ -56,6 +57,7 @@ describe('listScrapper', () => {
     scrapper.getPageContent.mockResolvedValue(getPage_withoutnext);
     const { films, nextPageUrl, error } = await listScrapper({
       url: 'testURL',
+      contentType: 'list',
       options,
     });
 
@@ -99,6 +101,7 @@ describe('Checking options...', () => {
 
     const { films, nextPageUrl, error } = await listScrapper({
       url: 'testURL',
+      contentType: 'list',
       options,
     });
 
@@ -118,6 +121,7 @@ describe('Checking options...', () => {
 
     const { films, nextPageUrl, error } = await listScrapper({
       url: 'testURL',
+      contentType: 'list',
       options,
     });
 
@@ -147,6 +151,7 @@ describe('Checking errors...', () => {
 
     const { films, nextPageUrl, error } = await listScrapper({
       url: 'testURL',
+      contentType: 'list',
       options,
     });
 
@@ -163,6 +168,7 @@ describe('Checking errors...', () => {
 
     const { films, nextPageUrl, error } = await listScrapper({
       url: 'testURL',
+      contentType: 'list',
       options,
     });
 

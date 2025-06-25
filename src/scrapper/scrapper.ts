@@ -4,6 +4,7 @@ import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
 import { ERROR_MESSAGES } from '../config/constants';
 import { checkIfValidURL, timeout } from '../utils/utils';
 import { PageContentResponse } from '../../types/scrapper';
+import { PageContentType } from '../../types/lists';
 
 
 class Scrapper {
@@ -31,8 +32,8 @@ class Scrapper {
     else return true;
   }
 
-  async getPageContent(url: string): Promise<PageContentResponse> {
-    const isTheURLValid = checkIfValidURL(url);
+  async getPageContent(url: string, contentType: PageContentType): Promise<PageContentResponse> {
+    const isTheURLValid = checkIfValidURL(url, contentType);
 
     if (!isTheURLValid) {
       return {

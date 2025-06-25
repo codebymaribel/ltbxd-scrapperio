@@ -9,7 +9,9 @@ import { searchIMDB } from '../utils/utils';
 export default async function listScrapper({
   url,
   options,
-  totalItems = 0,
+
+  contentType
+
 }: ListScrapperProps): Promise<ScrappedList> {
   try {
     const initBrowser = await scrapper.launchBrowser();
@@ -22,7 +24,7 @@ export default async function listScrapper({
       };
     }
 
-    const htmlContent = await scrapper.getPageContent(url);
+    const htmlContent = await scrapper.getPageContent(url, contentType);
 
     if (!htmlContent?.content) {
       await scrapper.closeBrowser();

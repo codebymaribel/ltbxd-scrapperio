@@ -72,6 +72,7 @@ describe('listScrapper', () => {
 
     const { films, nextPageUrl, error } = await listScrapper({
       url: 'testURL',
+      contentType: 'list',
       options:{
         IMDBID: true,
         poster: true,

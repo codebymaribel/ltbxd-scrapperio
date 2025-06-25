@@ -1,7 +1,7 @@
 import { getUserLists } from '../src';
 import {
   ERROR_MESSAGES,
-  LIST_TYPES,
+  CONTENT_TYPE,
   MAIN_URL,
   QUERY_RESULT_STATUS,
 } from '../src/config/constants';
@@ -13,7 +13,7 @@ jest.mock('../src/lists/UserLists', () => ({
   default: jest
     .fn()
     .mockImplementation(
-      ({ url = `${MAIN_URL}/testuser/${LIST_TYPES.lists}/` }) => {
+      ({ url = `${MAIN_URL}/testuser/${CONTENT_TYPE.LISTS}/` }) => {
         //Simulate pagination
         if (url.includes('page2')) {
           return Promise.resolve({

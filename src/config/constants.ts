@@ -9,12 +9,13 @@ export const MAIN_URL = 'https://letterboxd.com';
  * @constant
  */
 
-export const LIST_TYPES = {
-  watchlist: 'watchlist',
-  films: 'films',
-  list: 'list',
-  lists: 'lists'
-};
+export const CONTENT_TYPE = {
+  WATCHLIST: 'watchlist',
+  FILMS: 'films',
+  LIST: 'list',
+  LISTS: 'lists',
+  SEARCH: 'search'
+} as const;
 
 export const QUERY_RESULT_STATUS = {
   ok: 'OK',
@@ -22,11 +23,12 @@ export const QUERY_RESULT_STATUS = {
   pending: 'PENDING',
   not_found: '404',
   error: 'ERROR',
-};
+} as const;
 
 export const SCRAPPER_ERRORS = {
   missing_html_content : 'NO HTML CONTENT FOUND'
-}
+} as const;
+
 export const ERROR_MESSAGES = {
   missing_parameters: 'INCOMPLETE PARAMETERS',
   not_valid_url: 'YOU NEED TO SUBMIT A VALID LETTERBOXD URL',

@@ -11,7 +11,7 @@ import { FilmObject, FilmSearchObject } from '../types/films';
 import { ListCoverObject } from '../types/lists';
 import {
   ERROR_MESSAGES,
-  LIST_TYPES,
+  CONTENT_TYPE,
   MAIN_URL,
   QUERY_RESULT_STATUS,
 } from './config/constants';
@@ -50,7 +50,7 @@ export const getWatchlist = async ({
     Object.assign(options_selected, { poster: true });
 
   let currentUrl: string | null =
-    `${MAIN_URL}/${username}/${LIST_TYPES.watchlist}/`;
+    `${MAIN_URL}/${username}/${CONTENT_TYPE.WATCHLIST}/`;
 
   const allFilms: FilmObject[] = [];
   let triggeredError: string | null = null;
@@ -129,7 +129,7 @@ export const getUserLists = async ({
     Object.assign(options_selected, { amount: true });
 
   let currentUrl: string | null =
-    `${MAIN_URL}/${username}/${LIST_TYPES.lists}/`;
+    `${MAIN_URL}/${username}/${CONTENT_TYPE.LISTS}/`;
 
   const allLists: ListCoverObject[] = [];
   let triggeredError: string | null = null;
@@ -211,7 +211,7 @@ export const getListFilms = async ({
   while (currentUrl) {
     const { films, nextPageUrl, error } = await listScrapper({
       url: currentUrl,
-      contentType: 'list',
+      contentType: CONTENT_TYPE.LIST,
       options: options_selected,
     });
 

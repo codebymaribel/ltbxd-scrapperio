@@ -1,6 +1,6 @@
 import {
   ERROR_MESSAGES,
-  LIST_TYPES,
+  CONTENT_TYPE,
   MAIN_URL,
   QUERY_RESULT_STATUS,
 } from '../src/config/constants';
@@ -13,7 +13,7 @@ jest.mock('../src/lists/listScrapper', () => ({
   default: jest
     .fn()
     .mockImplementation(
-      ({ url = `${MAIN_URL}/testuser/${LIST_TYPES.watchlist}` }) => {
+      ({ url = `${MAIN_URL}/testuser/${CONTENT_TYPE.WATCHLIST}` }) => {
         //Simulate pagination
         if (url.includes('page2')) {
           return Promise.resolve({

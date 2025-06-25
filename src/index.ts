@@ -92,6 +92,7 @@ export const getWatchlist = async ({
     data: allFilms,
     errorMessage: null,
   };
+
 };
 
 /**

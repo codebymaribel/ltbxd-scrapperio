@@ -36,3 +36,7 @@ export const ERROR_MESSAGES = {
   page_not_found: 'PAGE NOT FOUND',
   scrapper_method_failed: 'SCRAPPER METHOD FAILED',
 } as const;
+
+export const PROJECT_MANAGER_MESSAGES = {
+  terms_not_acknowledged: 'Portfolio demo terms not acknowledged. See console for details.',
+} as const;

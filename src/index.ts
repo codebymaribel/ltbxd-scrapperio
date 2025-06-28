@@ -1,3 +1,9 @@
+/**
+ * DISCLAIMER: This project is for portfolio purposes only.
+ * It demonstrates web scraping techniques and TypeScript development.
+ * Users should comply with Letterboxd's Terms of Use.
+ * Not intended for production use or distribution.
+ */
 import {
   FilmsResponseProps,
   ListProps,
@@ -10,11 +16,14 @@ import {
 import { FilmObject, FilmSearchObject } from '../types/films';
 import { ListCoverObject } from '../types/lists';
 import {
-  ERROR_MESSAGES,
   CONTENT_TYPE,
+  ERROR_MESSAGES,
   MAIN_URL,
+  PROJECT_MANAGER_MESSAGES,
   QUERY_RESULT_STATUS,
 } from './config/constants';
+import { limitWrapper } from './limits/limit-wrapper';
+import { projectManager } from './limits/project-manager';
 import userListsScrapper from './lists/UserLists';
 import listScrapper from './lists/listScrapper';
 import { searchScrapper } from './lists/searchScrapper';
@@ -34,65 +43,86 @@ export const getWatchlist = async ({
     poster: true,
   },
 }: UserQueryProps): Promise<FilmsResponseProps> => {
-  if (!username) {
-    return {
-      status: QUERY_RESULT_STATUS.failed,
-      data: [],
-      errorMessage: ERROR_MESSAGES.missing_parameters,
-    };
-  }
+  return limitWrapper(async () => {
+    projectManager.displayIntro();
 
-  let options_selected = options;
-
-  if (options && !('IMDBID' in options))
-    Object.assign(options_selected, { IMDBID: true });
-  if (options && !('poster' in options))
-    Object.assign(options_selected, { poster: true });
-
-  let currentUrl: string | null =
-    `${MAIN_URL}/${username}/${CONTENT_TYPE.WATCHLIST}/`;
-
-  const allFilms: FilmObject[] = [];
-  let triggeredError: string | null = null;
-
-  while (currentUrl) {
-    const { films, nextPageUrl, error } = await listScrapper({
-      url: currentUrl,
-      contentType: 'watchlist',
-      options: options_selected,
-    });
-
-    allFilms.push(...films);
-    const isMaxReached = allFilms.length === options?.max;
-
-    if (isMaxReached) {
-      currentUrl = null;
-      break;
-    } else if (error) {
-      if (error) {
-        triggeredError = error;
-      }
-      currentUrl = null;
-      break;
+    if (!projectManager.requireTermsAcknowledgment()) {
+      return {
+        status: QUERY_RESULT_STATUS.error,
+        data: [],
+        errorMessage: PROJECT_MANAGER_MESSAGES.terms_not_acknowledged,
+      };
     }
 
-    currentUrl = nextPageUrl;
-  }
+    const rateCheck = projectManager.checkRateLimits();
 
-  if (triggeredError) {
+    if (!rateCheck.allowed) {
+      return {
+        status: QUERY_RESULT_STATUS.error,
+        data: [],
+        errorMessage: rateCheck.message || 'Rate limit exceeded',
+      };
+    }
+
+    if (!username) {
+      return {
+        status: QUERY_RESULT_STATUS.failed,
+        data: [],
+        errorMessage: ERROR_MESSAGES.missing_parameters,
+      };
+    }
+
+    let options_selected = options;
+
+    if (options && !('IMDBID' in options))
+      Object.assign(options_selected, { IMDBID: true });
+    if (options && !('poster' in options))
+      Object.assign(options_selected, { poster: true });
+
+    let currentUrl: string | null =
+      `${MAIN_URL}/${username}/${CONTENT_TYPE.WATCHLIST}/`;
+
+    const allFilms: FilmObject[] = [];
+    let triggeredError: string | null = null;
+
+    while (currentUrl) {
+      const { films, nextPageUrl, error } = await listScrapper({
+        url: currentUrl,
+        contentType: 'watchlist',
+        options: options_selected,
+      });
+
+      allFilms.push(...films);
+      const isMaxReached = allFilms.length === options?.max;
+
+      if (isMaxReached) {
+        currentUrl = null;
+        break;
+      } else if (error) {
+        if (error) {
+          triggeredError = error;
+        }
+        currentUrl = null;
+        break;
+      }
+
+      currentUrl = nextPageUrl;
+    }
+
+    if (triggeredError) {
+      return {
+        status: QUERY_RESULT_STATUS.error,
+        data: allFilms,
+        errorMessage: triggeredError,
+      };
+    }
+
     return {
-      status: QUERY_RESULT_STATUS.error,
+      status: QUERY_RESULT_STATUS.ok,
       data: allFilms,
-      errorMessage: triggeredError,
+      errorMessage: null,
     };
-  }
-
-  return {
-    status: QUERY_RESULT_STATUS.ok,
-    data: allFilms,
-    errorMessage: null,
-  };
-
+  });
 };
 
 /**
@@ -111,66 +141,68 @@ export const getUserLists = async ({
     amount: true,
   },
 }: UserListsProps): Promise<ListsResponseProps> => {
-  if (!username) {
-    return {
-      status: QUERY_RESULT_STATUS.failed,
-      data: [],
-      errorMessage: ERROR_MESSAGES.missing_parameters,
-    };
-  }
-
-  let options_selected = options;
-
-  if (options && !('posters' in options))
-    Object.assign(options_selected, { posters: true });
-  if (options && !('summary' in options))
-    Object.assign(options_selected, { summary: true });
-  if (options && !('amount' in options))
-    Object.assign(options_selected, { amount: true });
-
-  let currentUrl: string | null =
-    `${MAIN_URL}/${username}/${CONTENT_TYPE.LISTS}/`;
-
-  const allLists: ListCoverObject[] = [];
-  let triggeredError: string | null = null;
-
-  while (currentUrl) {
-    const { lists, nextPageUrl, error } = await userListsScrapper({
-      url: currentUrl,
-      totalItems: allLists.length,
-      contentType: 'lists',
-      options: options_selected,
-    });
-
-    allLists.push(...lists);
-    const isMaxReached = allLists.length === options?.max;
-
-    if (isMaxReached) {
-      currentUrl = null;
-      break;
-    } else if (error) {
-      if (error) {
-        triggeredError = error;
-      }
-      currentUrl = null;
-      break;
+  return limitWrapper(async () => {
+    if (!username) {
+      return {
+        status: QUERY_RESULT_STATUS.failed,
+        data: [],
+        errorMessage: ERROR_MESSAGES.missing_parameters,
+      };
     }
-    currentUrl = nextPageUrl;
-  }
 
-  if (triggeredError) {
+    let options_selected = options;
+
+    if (options && !('posters' in options))
+      Object.assign(options_selected, { posters: true });
+    if (options && !('summary' in options))
+      Object.assign(options_selected, { summary: true });
+    if (options && !('amount' in options))
+      Object.assign(options_selected, { amount: true });
+
+    let currentUrl: string | null =
+      `${MAIN_URL}/${username}/${CONTENT_TYPE.LISTS}/`;
+
+    const allLists: ListCoverObject[] = [];
+    let triggeredError: string | null = null;
+
+    while (currentUrl) {
+      const { lists, nextPageUrl, error } = await userListsScrapper({
+        url: currentUrl,
+        totalItems: allLists.length,
+        contentType: 'lists',
+        options: options_selected,
+      });
+
+      allLists.push(...lists);
+      const isMaxReached = allLists.length === options?.max;
+
+      if (isMaxReached) {
+        currentUrl = null;
+        break;
+      } else if (error) {
+        if (error) {
+          triggeredError = error;
+        }
+        currentUrl = null;
+        break;
+      }
+      currentUrl = nextPageUrl;
+    }
+
+    if (triggeredError) {
+      return {
+        status: QUERY_RESULT_STATUS.error,
+        data: allLists,
+        errorMessage: triggeredError,
+      };
+    }
+
     return {
-      status: QUERY_RESULT_STATUS.error,
+      status: QUERY_RESULT_STATUS.ok,
       data: allLists,
-      errorMessage: triggeredError,
+      errorMessage: null,
     };
-  }
-
-  return {
-    status: QUERY_RESULT_STATUS.ok,
-    data: allLists,
-    errorMessage: null,
-  };
+  });
 };
 
 /**
@@ -188,65 +220,74 @@ export const getListFilms = async ({
     poster: true,
   },
 }: ListProps): Promise<FilmsResponseProps> => {
-  if (!url) {
-    return {
-      status: QUERY_RESULT_STATUS.failed,
-      data: [],
-      errorMessage: ERROR_MESSAGES.missing_parameters,
-    };
-  }
-
-  let options_selected = options;
-
-  if (options && !('IMDBID' in options))
-    Object.assign(options_selected, { IMDBID: true });
-  if (options && !('poster' in options))
-    Object.assign(options_selected, { poster: true });
-
-  let currentUrl: string | null = url;
-
-  const allFilms: FilmObject[] = [];
-  let triggeredError: string | null = null;
-
-  while (currentUrl) {
-    const { films, nextPageUrl, error } = await listScrapper({
-      url: currentUrl,
-      contentType: CONTENT_TYPE.LIST,
-      options: options_selected,
-    });
-
-    allFilms.push(...films);
-    const isMaxReached = allFilms.length === options?.max;
-
-    if (isMaxReached) {
-      currentUrl = null;
-      break;
-    } else if (error) {
-      if (error) {
-        triggeredError = error;
-      }
-      currentUrl = null;
-      break;
+  return limitWrapper(async () => {
+    if (!url) {
+      return {
+        status: QUERY_RESULT_STATUS.failed,
+        data: [],
+        errorMessage: ERROR_MESSAGES.missing_parameters,
+      };
     }
 
-    currentUrl = nextPageUrl;
-  }
+    let options_selected = options;
 
-  if (triggeredError) {
+    if (options && !('IMDBID' in options))
+      Object.assign(options_selected, { IMDBID: true });
+    if (options && !('poster' in options))
+      Object.assign(options_selected, { poster: true });
+
+    let currentUrl: string | null = url;
+
+    const allFilms: FilmObject[] = [];
+    let triggeredError: string | null = null;
+
+    while (currentUrl) {
+      const { films, nextPageUrl, error } = await listScrapper({
+        url: currentUrl,
+        contentType: CONTENT_TYPE.LIST,
+        options: options_selected,
+      });
+
+      allFilms.push(...films);
+      const isMaxReached = allFilms.length === options?.max;
+
+      if (isMaxReached) {
+        currentUrl = null;
+        break;
+      } else if (error) {
+        if (error) {
+          triggeredError = error;
+        }
+        currentUrl = null;
+        break;
+      }
+
+      currentUrl = nextPageUrl;
+    }
+
+    if (triggeredError) {
+      return {
+        status: QUERY_RESULT_STATUS.error,
+        data: allFilms,
+        errorMessage: triggeredError,
+      };
+    }
+
     return {
-      status: QUERY_RESULT_STATUS.error,
+      status: QUERY_RESULT_STATUS.ok,
       data: allFilms,
-      errorMessage: triggeredError,
+      errorMessage: null,
     };
-  }
-
-  return {
-    status: QUERY_RESULT_STATUS.ok,
-    data: allFilms,
-    errorMessage: null,
-  };
+  });
 };
 
+/**
+ * @summary Gets search results based on search query
+ * @description This function returns an array of objects with search results data.
+ * @param {string} title - Search query
+ * @param {object} options - SearchProps
+ * @returns {object}  SearchResponseProps
+ */
 export const searchFilm = async ({
   title,
   options = {
@@ -255,66 +296,69 @@ export const searchFilm = async ({
     director: true,
   },
 }: SearchProps): Promise<SearchResponseProps> => {
-  if (!title) {
-    return {
-      status: QUERY_RESULT_STATUS.failed,
-      data: [],
-      errorMessage: ERROR_MESSAGES.missing_parameters,
-    };
-  }
-
-  let options_selected = options;
-
-  if (options && !('poster' in options))
-    Object.assign(options_selected, { poster: true });
-  if (options && !('alternativeTitles' in options))
-    Object.assign(options_selected, { alternativeTitles: true });
-
-  if (options && !('director' in options))
-    Object.assign(options_selected, { director: true });
-
-  let formattedQuery = title.replace(" ", "+");
-  let searchquery: string | null = `${MAIN_URL}/search/films/${formattedQuery}/`;
-
-  const allFilms: FilmSearchObject[] = [];
-
-  let triggeredError: string | null = null;
-
-  while (searchquery) {
-    const { films, nextPageUrl, error } = await searchScrapper({
-      url: searchquery,
-      contentType: 'search',
-      options: options_selected,
-    });
-
-    allFilms.push(...films);
-    const isMaxReached = allFilms.length === options?.max;
-
-    if (isMaxReached) {
-      searchquery = null;
-      break;
-    } else if (error) {
-      if (error) {
-        triggeredError = error;
-      }
-      searchquery = null;
-      break;
+  return limitWrapper(async () => {
+    if (!title) {
+      return {
+        status: QUERY_RESULT_STATUS.failed,
+        data: [],
+        errorMessage: ERROR_MESSAGES.missing_parameters,
+      };
     }
 
-    searchquery = nextPageUrl;
-  }
+    let options_selected = options;
 
-  if (triggeredError) {
+    if (options && !('poster' in options))
+      Object.assign(options_selected, { poster: true });
+    if (options && !('alternativeTitles' in options))
+      Object.assign(options_selected, { alternativeTitles: true });
+
+    if (options && !('director' in options))
+      Object.assign(options_selected, { director: true });
+
+    let formattedQuery = title.replace(' ', '+');
+    let searchquery: string | null =
+      `${MAIN_URL}/search/films/${formattedQuery}/`;
+
+    const allFilms: FilmSearchObject[] = [];
+
+    let triggeredError: string | null = null;
+
+    while (searchquery) {
+      const { films, nextPageUrl, error } = await searchScrapper({
+        url: searchquery,
+        contentType: 'search',
+        options: options_selected,
+      });
+
+      allFilms.push(...films);
+      const isMaxReached = allFilms.length === options?.max;
+
+      if (isMaxReached) {
+        searchquery = null;
+        break;
+      } else if (error) {
+        if (error) {
+          triggeredError = error;
+        }
+        searchquery = null;
+        break;
+      }
+
+      searchquery = nextPageUrl;
+    }
+
+    if (triggeredError) {
+      return {
+        status: QUERY_RESULT_STATUS.error,
+        data: allFilms,
+        errorMessage: triggeredError,
+      };
+    }
+
     return {
-      status: QUERY_RESULT_STATUS.error,
+      status: QUERY_RESULT_STATUS.ok,
       data: allFilms,
-      errorMessage: triggeredError,
+      errorMessage: null,
     };
-  }
-
-  return {
-    status: QUERY_RESULT_STATUS.ok,
-    data: allFilms,
-    errorMessage: null,
-  };
+  });
 };

@@ -13,7 +13,7 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
-    "build": "tsc"
+    "demo": "npx --node-options='--no-deprecation'  ts-node ./src/demo.ts"
   },
   "dependencies": {
     "cheerio": "1.0.0",

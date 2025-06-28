@@ -7,6 +7,22 @@
 [![Test Coverage](https://img.shields.io/badge/coverage-97.1%25-brightgreen)](#testing)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
+## ⚖️ Legal Notice & Disclaimer
+
+**🎓 PORTFOLIO PURPOSE ONLY**
+
+This project is created for **portfolio demonstration purposes only**. It showcases web scraping techniques, TypeScript development, and API design patterns as part of a technical portfolio.
+
+**Important Legal Considerations:**
+- Users are responsible for complying with [Letterboxd's Terms of Use](https://letterboxd.com/legal/terms-of-use/)
+- This tool uses automated scraping which may violate Letterboxd's interface access requirements
+- **Not intended for production use, commercial distribution, or mass data extraction**
+- Consider using official APIs where available for production applications
+
+**Disclaimer:** The author disclaims any responsibility for misuse of this tool. Users should respect Letterboxd's terms of service and use this code responsibly.
+
+---
+
 ## ✨ Features
 
 - 🔍 **Extract complete watchlists** with automatic pagination.
@@ -248,6 +264,16 @@ This library is designed with respect for Letterboxd's infrastructure:
 - Respect Letterboxd's terms of service
 - Use primarily for personal projects and research
 
+## 🔄 Production Alternatives
+
+For production applications, consider these compliant approaches:
+
+- **Official Letterboxd API** (if/when available)
+- **User-initiated data export** features within Letterboxd
+- **Browser extensions** that work within the official interface
+- **RSS feeds** for public list updates (where available)
+- **Manual data entry** tools for personal use
+
 ## 🤝 Contributing
 
 Contributions are welcome! Here's how to get started:
@@ -264,6 +290,7 @@ Contributions are welcome! Here's how to get started:
 - Follow the existing code style
 - Update documentation as needed
 - Ensure all tests pass before submitting
+- **Maintain educational/portfolio focus**
 
 ## 📄 License
 
@@ -284,9 +311,10 @@ ISC © [CodebyMaribel](https://github.com/codebymaribel)
 - [ ] Caching layer for improved performance
 - [ ] Command-line interface (CLI)
 - [ ] Real-time progress callbacks
+- [ ] Official API integration (when available)
 
 ---
 
 **Built with ❤️ by [CodebyMaribel](https://github.com/codebymaribel) | [Portfolio](https://your-portfolio-link.com)**
 
-*Star ⭐ this repository if you found it helpful!*
+*This project demonstrates web scraping techniques and TypeScript development skills for educational purposes.*

@@ -4,7 +4,12 @@
   "description": "A public lists scrapper for letterboxd lists",
   "main": "./dist/index.js",
   "types": "./dist/types/index.d.ts",
-  "author": "",
+  "author": "CodebyMaribel <codebymaribel@gmail.com>",
+  "homepage": "https://github.com/codebymaribel/ltbxd-scrapperio",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codebymaribel/ltbxd-scrapperio.git"
+  },
   "license": "ISC",
   "scripts": {
     "dev": "nodemon src/index.ts eslint src",

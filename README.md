@@ -2,22 +2,38 @@
 
 > A TypeScript library for scraping Letterboxd public lists with automatic IMDB integration and movie poster extraction
 
-[![npm version](https://img.shields.io/npm/v/ltbxdscrapper)](https://www.npmjs.com/package/ltbxdscrapper)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue)](https://www.typescriptlang.org/)
 [![Test Coverage](https://img.shields.io/badge/coverage-97.1%25-brightgreen)](#testing)
-[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+
+## 📋 Table of Contents
+
+- [⚖️ Legal Notice & Disclaimer](#%EF%B8%8F-legal-notice--disclaimer)
+- [✨ Features](#-features)
+- [🚀 Quick Start](#-quick-start)
+- [🎬 Portfolio Demo](#-portfolio-demo)
+- [📊 Performance](#-performance)
+- [🛠️ API Reference](#%EF%B8%8F-api-reference)
+- [🔧 Error Handling](#-error-handling)
+- [🧪 Testing](#-testing)
+- [🚀 Development](#-development)
+- [📋 Requirements](#-requirements)
+- [🛡️ Rate Limiting & Ethics](#%EF%B8%8F-rate-limiting--ethics)
+- [🔄 Production Alternatives](#-production-alternatives)
+- [🤝 Contributing](#-contributing)
+- [🙏 Acknowledgments](#-acknowledgments)
+- [📈 Roadmap](#-roadmap)
 
 ## ⚖️ Legal Notice & Disclaimer
 
-**🎓 PORTFOLIO PURPOSE ONLY**
+**🎓 EDUCATIONAL & PORTFOLIO PURPOSE ONLY**
 
-This project is created for **portfolio demonstration purposes only**. It showcases web scraping techniques, TypeScript development, and API design patterns as part of a technical portfolio.
+This project is created for **educational and portfolio demonstration purposes only**. It showcases web scraping techniques, TypeScript development, and API design patterns as part of a technical portfolio.
 
 **Important Legal Considerations:**
-- Users are responsible for complying with [Letterboxd's Terms of Use](https://letterboxd.com/legal/terms-of-use/)
-- This tool uses automated scraping which may violate Letterboxd's interface access requirements
-- **Not intended for production use, commercial distribution, or mass data extraction**
-- Consider using official APIs where available for production applications
+- Users are responsible for complying with [Letterboxd's Terms of Use](https://letterboxd.com/legal/terms-of-use/).
+- This tool uses automated scraping which may violate Letterboxd's interface access requirements.
+- **Not intended for production use, commercial distribution, or mass data extraction.**
+- Consider using official APIs where available for production applications.
 
 **Disclaimer:** The author disclaims any responsibility for misuse of this tool. Users should respect Letterboxd's terms of service and use this code responsibly.
 
@@ -102,6 +118,100 @@ const minimal = await getWatchlist({
     IMDBID: false
   }
 });
+```
+
+## 🎬 Portfolio Demo
+
+**Experience the scraper in action with an interactive demonstration!**
+
+This project includes a comprehensive portfolio demo that showcases:
+- ✨ **Real-time scraping** with animated progress indicators
+- 🛡️ **Rate limiting** and responsible scraping practices  
+- 🔧 **Error handling** and edge case management
+- 📊 **Performance monitoring** and metrics collection
+- ⚙️ **Multi-stage processing** with detailed progress tracking
+
+### 🚀 Running the Demo
+
+To experience the portfolio demonstration:
+
+```bash
+# Clone the repository
+git clone https://github.com/codebymaribel/ltbxd-scrapperio.git
+cd ltbxd-scrapperio
+
+# Install dependencies
+npm install
+
+# Run the interactive portfolio demo
+npm run demo
+```
+
+**Recommended Package.json Scripts:**
+Add these scripts to your `package.json` for the best demo experience:
+
+```json
+{
+  "scripts": {
+    "demo": "echo '🎬 Starting Portfolio Demo...' && LTBXD_PORTFOLIO_DEMO=true NODE_ENV=development npx --node-options='--no-deprecation' ts-node demo/portfolio-showcase.ts",
+    "demo:quick": "echo '⚡ Quick Demo (2 min)...' && LTBXD_PORTFOLIO_DEMO=true npx ts-node demo/quick-demo.ts",
+    "demo:interactive": "echo '🎪 Interactive Demo...' && LTBXD_PORTFOLIO_DEMO=true npx ts-node demo/interactive-demo.ts"
+  }
+}
+```
+
+### 📺 Demo Features
+
+The portfolio demo showcases:
+
+1. **🎯 Basic Watchlist Extraction**
+   - Real user data extraction
+   - IMDB integration demonstration
+   - Poster URL retrieval
+
+2. **⚙️ Advanced Configuration Options**
+   - Performance optimization techniques
+   - Flexible API design
+   - Multiple extraction modes
+
+3. **🛡️ Rate Limiting & Ethics**
+   - Responsible scraping practices
+   - Request throttling demonstration
+   - Terms of service compliance
+
+4. **🔧 Error Handling**
+   - Invalid username handling
+   - Network error recovery
+   - Graceful failure management
+
+5. **📊 Performance Monitoring**
+   - Real-time metrics collection
+   - Response time tracking
+   - Success rate monitoring
+
+### 🎨 Demo Output Example
+
+```
+🎬 Letterboxd Scrapper - Portfolio Demonstration
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎓 Educational Purpose: Portfolio & skill demonstration
+⚖️  Legal Compliance: Users must respect Letterboxd ToS
+🛡️  Rate Limited: Responsible scraping practices
+
+📋 DEMO 1: Basic Watchlist Extraction
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎬 Extracting watchlist for karyn
+✅ Successfully extracted 5 films
+
+📄 Sample Results:
+   1. "Persepolis"
+      IMDB ID: tt1175727
+      Poster: ✅ Available
+
+📊 Performance Statistics:
+   Total Requests: 1
+   Average Response Time: 1250ms
+   Success Rate: 100%
 ```
 
 ## 📊 Performance
@@ -226,6 +336,9 @@ npm run lint
 
 # Format code with Prettier
 npm run format
+
+# Portfolio demonstration
+npm run demo
 ```
 
 ### Project Structure
@@ -234,10 +347,12 @@ npm run format
 ltbxd-scrapperio/
 ├── src/
 │   ├── config/         # Configuration constants
+│   ├── limits/         # Rate limiting logic
 │   ├── lists/          # List scraping logic
 │   ├── scrapper/       # Core scraping functionality  
 │   ├── utils/          # Utility functions
-│   └── index.ts        # Main entry point
+│   ├── index.ts        # Main entry point
+│   └── demo.ts         # Main demo script
 ├── tests/              # Comprehensive test suite
 ├── types/              # TypeScript type definitions
 └── dist/               # Built output
@@ -270,8 +385,6 @@ For production applications, consider these compliant approaches:
 
 - **Official Letterboxd API** (if/when available)
 - **User-initiated data export** features within Letterboxd
-- **Browser extensions** that work within the official interface
-- **RSS feeds** for public list updates (where available)
 - **Manual data entry** tools for personal use
 
 ## 🤝 Contributing
@@ -292,10 +405,6 @@ Contributions are welcome! Here's how to get started:
 - Ensure all tests pass before submitting
 - **Maintain educational/portfolio focus**
 
-## 📄 License
-
-ISC © [CodebyMaribel](https://github.com/codebymaribel)
-
 ## 🙏 Acknowledgments
 
 - **[Letterboxd](https://letterboxd.com)** - For creating an amazing movie platform
@@ -315,6 +424,4 @@ ISC © [CodebyMaribel](https://github.com/codebymaribel)
 
 ---
 
-**Built with ❤️ by [CodebyMaribel](https://github.com/codebymaribel) | [Portfolio](https://your-portfolio-link.com)**
-
-*This project demonstrates web scraping techniques and TypeScript development skills for educational purposes.*
+**Built with ❤️ by [CodebyMaribel](https://github.com/codebymaribel)**

@@ -74,6 +74,12 @@ export const searchScrapper = async ({
           .text();
       }
 
+      console.log(title,
+        year,
+        alternativeTitles,
+        poster,
+        director,)
+
       films.push({
         title,
         year,

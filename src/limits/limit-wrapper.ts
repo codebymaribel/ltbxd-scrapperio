@@ -13,7 +13,6 @@ export async function limitWrapper<T>(
 ): Promise<T> {
   const {
     respectRateLimit = true,
-    showProgress = false,
     logErrors = true,
   } = options;
 
@@ -24,7 +23,7 @@ export async function limitWrapper<T>(
   if (respectRateLimit) {
     const rateCheck = projectManager.checkRateLimits();
     if (!rateCheck.allowed) {
-      throw new Error(rateCheck.message || 'Rate limit exceeded');
+      console.error(rateCheck.message || '🚨 Rate limit exceeded');
     }
   }
 
@@ -33,9 +32,7 @@ export async function limitWrapper<T>(
   try {
     const result = await requestFunction();
     projectManager.endRequest(startTime, true);
-    if (showProgress) {
-      projectManager.displayStats();
-    }
+  
     return result;
   } catch (error) {
     projectManager.endRequest(startTime, false);

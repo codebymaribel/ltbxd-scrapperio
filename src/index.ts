@@ -44,7 +44,7 @@ export const getWatchlist = async ({
   },
 }: UserQueryProps): Promise<FilmsResponseProps> => {
   return limitWrapper(async () => {
-    projectManager.displayIntro();
+
 
     if (!projectManager.requireTermsAcknowledgment()) {
       return {
@@ -150,6 +150,16 @@ export const getUserLists = async ({
       };
     }
 
+    const rateCheck = projectManager.checkRateLimits();
+
+    if (!rateCheck.allowed) {
+      return {
+        status: QUERY_RESULT_STATUS.error,
+        data: [],
+        errorMessage: rateCheck.message || 'Rate limit exceeded',
+      };
+    }
+
     let options_selected = options;
 
     if (options && !('posters' in options))
@@ -229,6 +239,16 @@ export const getListFilms = async ({
       };
     }
 
+    const rateCheck = projectManager.checkRateLimits();
+
+    if (!rateCheck.allowed) {
+      return {
+        status: QUERY_RESULT_STATUS.error,
+        data: [],
+        errorMessage: rateCheck.message || 'Rate limit exceeded',
+      };
+    }
+
     let options_selected = options;
 
     if (options && !('IMDBID' in options))
@@ -302,6 +322,16 @@ export const searchFilm = async ({
         status: QUERY_RESULT_STATUS.failed,
         data: [],
         errorMessage: ERROR_MESSAGES.missing_parameters,
+      };
+    }
+
+    const rateCheck = projectManager.checkRateLimits();
+
+    if (!rateCheck.allowed) {
+      return {
+        status: QUERY_RESULT_STATUS.error,
+        data: [],
+        errorMessage: rateCheck.message || 'Rate limit exceeded',
       };
     }
 

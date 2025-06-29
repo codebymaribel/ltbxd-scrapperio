@@ -71,7 +71,7 @@ export default async function userListsScrapper({
       }
 
       if (options?.amount) {
-        amount = $listSection.find('div.film-list-summary > p > small').text();
+        amount = $listSection.find('div.film-list-summary > div > span.value').text();
       }
 
       lists.push({ title, summary, amount, url, posters });

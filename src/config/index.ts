@@ -2,9 +2,9 @@
 export const PROJECT_CONFIG = {
     PORTFOLIO_MODE: process.env.NODE_ENV !== 'production',
     DEMO_MODE: process.env.DEMO_MODE !== 'true',
-    SHOW_TECHNICAL_INSIGHTS: true,
+    SHOW_TECHNICAL_INSIGHTS: false,
 
-    MAX_REQUESTS_PER_HOUR: 1,
+    MAX_REQUESTS_PER_HOUR: 6,
     REQUEST_DELAY_MS: 2000,
 
     TRACK_USAGE_STATS:true,

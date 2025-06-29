@@ -14,9 +14,7 @@
  */
 import { getListFilms, getUserLists, getWatchlist, searchFilm } from '.';
 import { QUERY_RESULT_STATUS } from './config/constants';
-
-process.env.DEMO_MODE = 'true';
-process.env.NODE_ENV ='development';
+import { projectManager } from './limits/project-manager';
 
 const DEMO_CONFIG = {
   DEMO_QUERIES: {
@@ -71,20 +69,6 @@ function displayDemoIntro(): void {
 }
 
 /**
- * Display demo features
- */
-function displayDemoFeatures(): void {
-  console.log('Features showcased:');
-  console.log(' - Complete watchlist extraction');
-  console.log(' - IMDB integration');
-  console.log(' - Rate limiting and ethical scraping');
-  console.log(' - Error handling');
-  console.log(' - Performance monitoring');
-  console.log(' - TypeScript implementation');
-  console.log();
-}
-
-/**
  * Demo 1: Basic Watchlist Extraction
  */
 
@@ -98,6 +82,7 @@ async function basicWatchlistDemo(): Promise<void> {
   const username = DEMO_CONFIG.DEMO_QUERIES.username;
   console.log(`🎯 Extracting watchlist for user: ${username}`);
   console.log('⚙️  Options: Default settings (IMDB IDs + posters)');
+  console.log();
 
   try {
     const result = await getWatchlist({
@@ -105,7 +90,7 @@ async function basicWatchlistDemo(): Promise<void> {
       options: {
         IMDBID: true,
         poster: true,
-        max: 5, // Limit for demo
+        max: 3, // Limit for demo
       },
     });
 
@@ -113,10 +98,10 @@ async function basicWatchlistDemo(): Promise<void> {
       console.log(`✅ Successfully extracted ${result.data.length} films`);
       console.log();
       console.log('📄 Sample Results:');
-      result.data.slice(0, 5).forEach((film, index) => {
+      result.data.slice(0, 3).forEach((film, index) => {
         console.log(`   ${index + 1}. "${film.name}"`);
-        console.log(`      IMDB ID: ${film.id || ' ❌ Not found'}`);
-        console.log(`      Poster: ${film.poster || ' ❌ Not found'}`);
+        console.log(`      ✅IMDB ID: ${film.id}` || ' ❌IMDB ID: Not found');
+        console.log(`      ✅Poster: ${film.poster}` || ' ❌Poster: Not found');
         console.log();
       });
     } else {
@@ -132,7 +117,7 @@ async function basicWatchlistDemo(): Promise<void> {
  */
 async function customListFilmsDemo(): Promise<void> {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('⚙️  DEMO 2: Custom List Films Extraction');
+  console.log('📋 DEMO 2: Custom List Films Extraction');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('Demonstrates: Flexible API design, performance optimization');
   console.log();
@@ -140,9 +125,10 @@ async function customListFilmsDemo(): Promise<void> {
   const list_url = DEMO_CONFIG.DEMO_QUERIES.list_url;
 
   // Demo fast extraction (no IMDB lookup)
-  console.log('🚀 Fast Extraction (Skip IMDB lookup for speed):');
-  console.log(`   List: ${list_url}`);
-  console.log('   Options: { IMDBID: false, poster: true, max: 3 }');
+  console.log('🎯 Fast Extraction (Skip IMDB lookup for speed):');
+  console.log('ℹ️ Benefits: Faster processing, reduced API calls');
+  console.log(`🔗 List: ${list_url}`);
+  console.log('⚙️ Options: { IMDBID: false, poster: true, max: 3 }');
   console.log();
 
   try {
@@ -161,40 +147,16 @@ async function customListFilmsDemo(): Promise<void> {
       console.log('📄 Sample Results:');
       result.data.slice(0, 3).forEach((film, index) => {
         console.log(`   ${index + 1}. "${film.name}"`);
-        console.log(`      IMDB ID: ${film.id || ' ❌ Not found'}`);
-        console.log(`      Poster: ${film.poster || ' ❌ Not found'}`);
+        console.log(
+          !film.id ? '      ✅IMDB ID: Not found' : `     ❌IMDB ID:  ${film.id}`,
+        );
+        console.log(`      ✅Poster: ${film.poster}` || '      ❌Poster: Not found');
         console.log();
       });
-      console.log('   Benefits: Faster processing, reduced API calls');
+      console.log();
     }
   } catch (error) {
     console.log(`❌ Fast extraction error: ${error}`);
-  }
-
-  console.log();
-
-  // Demo minimal extraction
-  console.log('🎯 Minimal Data Extraction (Titles only):');
-  console.log('   Options: { IMDBID: false, poster: false, max: 3 }');
-
-  try {
-    const minimalResult = await getListFilms({
-      url: list_url,
-      options: {
-        IMDBID: false,
-        poster: false,
-        max: 3,
-      },
-    });
-    if (minimalResult.status === QUERY_RESULT_STATUS.ok) {
-      console.log(
-        `✅ Minimal extraction: ${minimalResult.data.length} films (titles only)`,
-      );
-      console.log('');
-      console.log('   Use case: Quick title lists, reduced bandwidth');
-    }
-  } catch (error) {
-    console.log(`❌ Minimal extraction error: ${error}`);
   }
 }
 
@@ -206,134 +168,210 @@ async function userListsDemo(): Promise<void> {
   console.log('📝 DEMO 3: User Lists Extraction');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log(
-    'Demonstrates: Extended functionality, comprehensive data extraction',
+    'Demonstrates: Extended runtime query (user has a lot of lists) with automatic pagination handling',
   );
   console.log();
 
   const username = DEMO_CONFIG.DEMO_QUERIES.username;
-  console.log(`📋 Extracting public lists for user: ${username}`);
-
+  console.log(`🎯 Extracting public lists for user: ${username}`);
+  console.log('⚙️ Options: { posters: true, summary: false, amount: true }');
+  console.log();
   try {
-    // Check if getUserLists is implemented
-    if (typeof getUserLists === 'function') {
-      const listsResult = await getUserLists({
-        username,
-        options: {
-          posters: true,
-          summary: true,
-          amount: true,
-        },
-      });
+    const listsResult = await getUserLists({
+      username,
+      options: {
+        posters: true,
+        summary: false,
+        amount: true,
+      },
+    });
 
-      if (listsResult.status === QUERY_RESULT_STATUS.ok) {
-        console.log(`✅ Found ${listsResult.data.length} public lists`);
+    if (listsResult.status === QUERY_RESULT_STATUS.ok) {
+      console.log(`✅ Found ${listsResult.data.length} public lists`);
+      console.log();
+      console.log('📄 Sample Lists:');
+      listsResult.data.slice(0, 2).forEach((list, index) => {
+        console.log(`   ${index + 1}. "${list.title}"`);
+        console.log(
+          `      ✅Films: ${list.amount}` || '❌Films: Unknown count',
+        );
+        console.log(
+          !list.summary ? '      ✅Summary: None' : `      ❌Summary: ${list.summary}`,
+        );
+        if (list.posters) {
+            console.log(`      ✅Posters:`);
+          list.posters.forEach((poster, index) => {
+            console.log(`         ${index + 1}.- ${poster}`);
+          });
+        }else{
+            console.log(`      ❌Posters: None`);
+        }
+        console.log(list.url ? `      ✅URL: ${list.url}` : '      ❌URL: Not found');
         console.log();
-        console.log('📄 Sample Lists:');
-        listsResult.data.slice(0, 2).forEach((list, index) => {
-          console.log(`   ${index + 1}. "${list.title}"`);
-          console.log(`      Films: ${list.amount || 'Unknown count'}`);
-          console.log(
-            `      Summary: ${list.summary ? `✅ ${list.summary}` : '❌ None'}`,
-          );
-          console.log();
-        });
-      } else {
-        console.log(`❌ Lists extraction failed: ${listsResult.errorMessage}`);
-      }
+      });
     } else {
-      console.log('ℹ️  User lists feature not yet implemented');
-      console.log("   Planned feature: Extract user's custom movie lists");
+      console.log(`❌ List extraction error`);
     }
   } catch (error) {
     console.log(`❌ Lists demo error: ${error}`);
   }
 }
 
-
 /**
- * Demo 4: Rate Limiting & Ethical Scraping
+ * Demo 4:  Search Film
  */
-async function demoRateLimiting(): Promise<void> {
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('🛡️  DEMO 4: Rate Limiting & Ethical Scraping');
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('Demonstrates: Responsible development, API best practices');
+async function searchFilmDemo(): Promise<void> {
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('📝 DEMO 4: Search Film');
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('Demonstrates: Search film by name functionality');
   console.log();
 
-  console.log('⏱️  Testing request delay enforcement...');
+  const title = DEMO_CONFIG.DEMO_QUERIES.search_query;
+  console.log(`📋 Extracting search results for: ${title}`);
+  console.log(
+    '⚙️ Options: { poster: false, alternativeTitles: true, director: true }',
+  );
 
-  // First request
-  console.log('📡 Making first request...');
-  const result1 = await getWatchlist({
-    username: DEMO_CONFIG.DEMO_QUERIES.username,
-    options: { IMDBID: false, poster: false, max: 1 },
-  });
-  console.log(`   Result: ${result1.status}`);
+  try {
+    const searchResult = await searchFilm({
+      title,
+      options: {
+        poster: false,
+      },
+    });
 
-  // Immediate second request (should be rate limited)
-  console.log('📡 Making immediate second request...');
-  const result2 = await getWatchlist({
-    username: DEMO_CONFIG.DEMO_QUERIES.username,
-    options: { IMDBID: false, poster: false, max: 1 },
-  });
-
-  if (result2.status === 'ERROR' && result2.errorMessage?.includes('wait')) {
-    console.log('✅ Rate limiting working correctly!');
-    console.log(`   Message: ${result2.errorMessage}`);
-  } else {
-    console.log('⚠️  Rate limiting may not be configured');
+    if (searchResult.status === QUERY_RESULT_STATUS.ok) {
+      console.log(`✅ Found ${searchResult.data.length} related films`);
+      //TODO: Remove this line
+      console.log(searchResult.data);
+      console.log('📄 Sample Films:');
+      searchResult.data.slice(0, 3).forEach((film, index) => {
+        console.log(`   ${index + 1}. "${film.title}"`);
+        console.log(`      Year: ${film.year || 'Unknown count'}`);
+        console.log(`      Director: ${film.director || 'Unknown count'}`);
+        console.log(
+          `      Alternative Titles: ${film.alternativeTitles || 'Unknown count'}`,
+        );
+        console.log(
+          `      Poster: ${film.poster ? `✅ ${film.poster}` : '❌ None'}`,
+        );
+        console.log();
+      });
+    } else {
+      console.log(`❌ Search extraction failed: ${searchResult.errorMessage}`);
+    }
+  } catch (error) {
+    console.log(`❌ Search demo error: ${error}`);
   }
-
-  console.log();
-  console.log('🎯 Rate Limiting Features:');
-  console.log('   • 2-second minimum delay between requests');
-  console.log('   • 15 requests per hour maximum');
-  console.log('   • Automatic request tracking');
-  console.log('   • User-friendly error messages');
 }
 
 /**
  * Demo 5: Error Handling
  */
 async function demoErrorHandling(): Promise<void> {
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('🔧 DEMO 5: Comprehensive Error Handling');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('Demonstrates: Robust error management, user experience');
-    console.log();
-  
-    // Test invalid username
-    console.log('🧪 Testing invalid username handling...');
-    const invalidResult = await getWatchlist({
-      username: 'this-user-definitely-does-not-exist-12345',
-      options: { IMDBID: false, poster: false, max: 1 }
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('📋 DEMO 5: Comprehensive Error Handling');
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('Demonstrates: Robust error management, user experience');
+  console.log();
+  console.log('🎯 Error Handling Features:');
+  console.log('   • User-friendly error messages');
+  console.log('   • Specific error codes');
+  console.log('   • Graceful failure handling');
+  console.log('   • Network error recovery');
+  console.log();
+
+  // Test invalid username
+  console.log('🧪 Testing invalid username handling...');
+  console.log();
+  const invalidResult = await getWatchlist({
+    username: 'this-user-definitely-does-not-exist-12345',
+    options: { IMDBID: false, poster: false, max: 1 },
+  });
+
+  console.log(`   Username: "this-user-definitely-does-not-exist-12345"`);
+  console.log((
+    invalidResult.status === QUERY_RESULT_STATUS.error
+      ? `   ✅`
+      : '   ❌') + `Status: ${invalidResult.status}`,
+  );
+  console.log(`   ✅Error: ${invalidResult.errorMessage || 'None'}`);
+  console.log();
+
+  // Test missing parameters
+  console.log('🧪 Testing missing parameters...');
+  try {
+    const missingResult = await searchFilm({
+      title: '', // Empty query
+      options: { poster: false },
     });
-  
-    console.log(`   Username: "this-user-definitely-does-not-exist-12345"`);
-    console.log(`   Status: ${invalidResult.status}`);``
-    console.log(`   Error: ${invalidResult.errorMessage || 'None'}`);
-    console.log();
-  
-    // Test missing parameters
-    console.log('🧪 Testing missing parameters...');
-    try {
-      const missingResult = await searchFilm({
-        title: '', // Empty query
-        options: { poster: false }
-      });
-      console.log(`   Empty query result: ${missingResult.status}`);
-      console.log(`   Error: ${missingResult.errorMessage}`);
-    } catch (error) {
-      console.log(`   Caught error: ${error}`);
-    }
-  
-    console.log();
-    console.log('🎯 Error Handling Features:');
-    console.log('   • User-friendly error messages');
-    console.log('   • Specific error codes');
-    console.log('   • Graceful failure handling');
-    console.log('   • Network error recovery');
+    console.log((
+      missingResult.status === QUERY_RESULT_STATUS.failed
+        ? `   ✅`
+        : '   ❌') + `Status: ${missingResult.status}`,
+    );
+    console.log(`   ✅Error: ${missingResult.errorMessage}`);
+  } catch (error) {
+    console.log(`   Caught error: ${error}`);
   }
+
+  console.log();
+}
+
+/**
+ * Demo 6: Rate Limiting & Ethical Scraping
+ */
+async function demoRateLimiting(): Promise<void> {
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('🛡️  DEMO 6: Rate Limiting & Ethical Scraping');
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('Demonstrates: Responsible development, API best practices');
+  console.log();
+
+  console.log('🎯 Rate Limiting Features:');
+  console.log('   • 2-second minimum delay between requests');
+  console.log('   • 6 requests per hour maximum');
+  console.log('   • Automatic request tracking');
+  console.log('   • User-friendly error messages');
+  console.log();
+  // Immediate sixth request (should be rate limited)
+  console.log('📡 Making sixth request...');
+  console.log();
+  const result = await getWatchlist({
+    username: DEMO_CONFIG.DEMO_QUERIES.username,
+    options: { IMDBID: false, poster: false, max: 1 },
+  });
+
+  if (result.status === QUERY_RESULT_STATUS.error && result.errorMessage?.includes('LIMIT')) {
+    console.log('✅ Scrapping limiting working correctly!');
+    console.log(`   Message: ${result.errorMessage}`);
+  } else {
+    console.log('⚠️  Scrapping limiting may not be configured');
+  }
+}
+/**
+ * Display demo features
+ */
+
+function displayDemoFeatures(): void {
+  console.log();
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('ℹ️ Features showcased:');
+  console.log();
+  console.log(' ✅ Watchlist extraction');
+  console.log(" ✅ User's public lists extraction");
+  console.log(' ✅ Films from a list extraction');
+  console.log(' ✅ Film search by title');
+  console.log(' ✅ Automatic pagination for long lists');
+  console.log(' ✅ Configurable data options (posters, IMDB IDs)');
+  console.log(' ✅ Performance tuning (fast extraction mode)');
+  console.log(' ✅ Rate limiting & ethical scraping');
+  console.log(' ✅ Comprehensive error handling');
+  console.log(' ✅ Performance monitoring');
+  console.log(' ✅ TypeScript implementation');
+  console.log();
+}
 
 /**
  * Main demo function
@@ -343,18 +381,18 @@ async function runDemo(): Promise<void> {
   // Set environment for demo
   process.env.NODE_ENV = 'development';
   process.env.DEMO_MODE = 'true';
-  //TODO
-  process.env.LTBXD_SHOW_METRICS = 'true';
-  process.env.LTBXD_VERBOSE_LOGGING = 'true';
+  process.env.SHOW_TECHNICAL_INSIGHTS = 'true';
 
   try {
     displayDemoIntro();
-    displayDemoFeatures();
     await basicWatchlistDemo();
     await customListFilmsDemo();
     await userListsDemo();
+    await searchFilmDemo();
+    await demoErrorHandling();
     await demoRateLimiting();
-    await demoErrorHandling(); 
+    displayDemoFeatures();
+    projectManager.displayStats();
   } catch (error) {
     console.error('❌ Error running demo:', error);
   }

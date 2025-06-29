@@ -50,7 +50,7 @@ class PortfolioUsageManager {
     if (this.requestTimeArray.length >= PROJECT_CONFIG.MAX_REQUESTS_PER_HOUR) {
       return {
         allowed: false,
-        message: `Rate limit: ${PROJECT_CONFIG.MAX_REQUESTS_PER_HOUR} requests per hour`,
+        message: `🚨QUERY LIMIT EXCEEDED: ${PROJECT_CONFIG.MAX_REQUESTS_PER_HOUR} requests per hour`,
       };
     }
 
@@ -62,9 +62,11 @@ class PortfolioUsageManager {
         PROJECT_CONFIG.REQUEST_DELAY_MS -
           (now - this.stats.lastRequestTime) / 1000,
       );
+
+      console.log('⌛ Waiting the required time before next request...');
+      setTimeout(() => {}, waitTime * 1000);
       return {
-        allowed: false,
-        message: `Rate limit: Wait ${waitTime} seconds before next request`,
+        allowed: true
       };
     }
 
@@ -128,7 +130,7 @@ class PortfolioUsageManager {
    */
   displayStats(): void {
     if (!PROJECT_CONFIG.LOG_PERFORMANCE_METRICS) return;
-
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log('\n📊 Portfolio Demo Statistics:');
     console.log(`   Total Requests: ${this.stats.requests}`);
     console.log(

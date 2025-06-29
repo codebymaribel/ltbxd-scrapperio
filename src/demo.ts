@@ -23,16 +23,6 @@ const DEMO_CONFIG = {
       'https://letterboxd.com/crew/list/most-obsessively-rewatched-meryl-streep-films/',
     search_query: 'Jurassic Park',
   },
-
-  DEMO_DELAY: 3000, // 3 second delay between sections
-  SHOWCASE_FEATURES: {
-    basicWatchlist: true,
-    advancedOptions: true,
-    userLists: true,
-    rateLimiting: true,
-    errorHandling: true,
-    performanceMetrics: true,
-  },
 };
 
 /**
@@ -148,9 +138,13 @@ async function customListFilmsDemo(): Promise<void> {
       result.data.slice(0, 3).forEach((film, index) => {
         console.log(`   ${index + 1}. "${film.name}"`);
         console.log(
-          !film.id ? '      ✅IMDB ID: Not found' : `     ❌IMDB ID:  ${film.id}`,
+          !film.id
+            ? '      ✅IMDB ID: Not found'
+            : `     ❌IMDB ID:  ${film.id}`,
         );
-        console.log(`      ✅Poster: ${film.poster}` || '      ❌Poster: Not found');
+        console.log(
+          `      ✅Poster: ${film.poster}` || '      ❌Poster: Not found',
+        );
         console.log();
       });
       console.log();
@@ -196,17 +190,21 @@ async function userListsDemo(): Promise<void> {
           `      ✅Films: ${list.amount}` || '❌Films: Unknown count',
         );
         console.log(
-          !list.summary ? '      ✅Summary: None' : `      ❌Summary: ${list.summary}`,
+          !list.summary
+            ? '      ✅Summary: None'
+            : `      ❌Summary: ${list.summary}`,
         );
         if (list.posters) {
-            console.log(`      ✅Posters:`);
+          console.log(`      ✅Posters:`);
           list.posters.forEach((poster, index) => {
             console.log(`         ${index + 1}.- ${poster}`);
           });
-        }else{
-            console.log(`      ❌Posters: None`);
+        } else {
+          console.log(`      ❌Posters: None`);
         }
-        console.log(list.url ? `      ✅URL: ${list.url}` : '      ❌URL: Not found');
+        console.log(
+          list.url ? `      ✅URL: ${list.url}` : '      ❌URL: Not found',
+        );
         console.log();
       });
     } else {
@@ -243,19 +241,25 @@ async function searchFilmDemo(): Promise<void> {
 
     if (searchResult.status === QUERY_RESULT_STATUS.ok) {
       console.log(`✅ Found ${searchResult.data.length} related films`);
-      //TODO: Remove this line
-      console.log(searchResult.data);
+
       console.log('📄 Sample Films:');
       searchResult.data.slice(0, 3).forEach((film, index) => {
         console.log(`   ${index + 1}. "${film.title}"`);
-        console.log(`      Year: ${film.year || 'Unknown count'}`);
-        console.log(`      Director: ${film.director || 'Unknown count'}`);
-        console.log(
-          `      Alternative Titles: ${film.alternativeTitles || 'Unknown count'}`,
-        );
-        console.log(
-          `      Poster: ${film.poster ? `✅ ${film.poster}` : '❌ None'}`,
-        );
+        console.log(`      ✅ Year: ${film.year || 'Unknown count'}`);
+        console.log(`      ✅ Director: ${film.director || 'Unknown count'}`);
+        if (film.alternativeTitles) {
+          console.log('      ✅ Alternative Titles:');
+          film.alternativeTitles.slice(0, 3).forEach((title, index) => {
+            console.log(`         ${index + 1}.- ${title}`);
+          });
+        } else {
+          console.log('      ❌ Alternative Titles: None');
+        }
+        if (film.poster) {
+          console.log(`      ✅❌Poster: ${film.poster}`);
+        } else {
+          console.log(`      ✅Poster: None`);
+        }
         console.log();
       });
     } else {
@@ -291,10 +295,9 @@ async function demoErrorHandling(): Promise<void> {
   });
 
   console.log(`   Username: "this-user-definitely-does-not-exist-12345"`);
-  console.log((
-    invalidResult.status === QUERY_RESULT_STATUS.error
-      ? `   ✅`
-      : '   ❌') + `Status: ${invalidResult.status}`,
+  console.log(
+    (invalidResult.status === QUERY_RESULT_STATUS.error ? `   ✅` : '   ❌') +
+      `Status: ${invalidResult.status}`,
   );
   console.log(`   ✅Error: ${invalidResult.errorMessage || 'None'}`);
   console.log();
@@ -306,8 +309,8 @@ async function demoErrorHandling(): Promise<void> {
       title: '', // Empty query
       options: { poster: false },
     });
-    console.log((
-      missingResult.status === QUERY_RESULT_STATUS.failed
+    console.log(
+      (missingResult.status === QUERY_RESULT_STATUS.failed
         ? `   ✅`
         : '   ❌') + `Status: ${missingResult.status}`,
     );
@@ -343,7 +346,10 @@ async function demoRateLimiting(): Promise<void> {
     options: { IMDBID: false, poster: false, max: 1 },
   });
 
-  if (result.status === QUERY_RESULT_STATUS.error && result.errorMessage?.includes('LIMIT')) {
+  if (
+    result.status === QUERY_RESULT_STATUS.error &&
+    result.errorMessage?.includes('LIMIT')
+  ) {
     console.log('✅ Scrapping limiting working correctly!');
     console.log(`   Message: ${result.errorMessage}`);
   } else {

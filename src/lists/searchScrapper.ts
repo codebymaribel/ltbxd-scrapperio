@@ -46,16 +46,16 @@ export const searchScrapper = async ({
       const $filmContainer = $(filmContainer);
 
       const title = $filmContainer
-        .find('div.film-detail-content > h2 > span > a')
+        .find('article > div.body > h2 > span > a')
         .text().trimEnd();
       const yearText = $filmContainer
-        .find('div.film-detail-content > h2 > span > small > a')
+        .find('article > div.body > h2 > span > small > a')
         .text();
       const year = parseInt(yearText, 10);
 
       if (options?.alternativeTitles) {
         const titlesString = $filmContainer
-          .find('div.film-detail-content > div.film-metadata > p')
+          .find('article > div.body > div.film-metadata > p')
           .text();
         alternativeTitles = titlesString
           .replace('Alternative titles: ', '')
@@ -65,21 +65,14 @@ export const searchScrapper = async ({
 
       if (options?.poster) {
         poster =
-          $filmContainer.find('div.film-poster > div > img').attr('src') || '';
+          $filmContainer.find('article > div.film-poster > div > img').attr('src') || '';
       }
 
       if (options?.director) {
         director = $filmContainer
-          .find('div.film-detail-content > p.film-metadata > a')
+          .find('article > div.body > p.film-metadata > a')
           .text();
       }
-
-      console.log(title,
-        year,
-        alternativeTitles,
-        poster,
-        director,)
-
       films.push({
         title,
         year,

@@ -72,6 +72,7 @@ export const getWatchlist = async ({
       };
     }
 
+    console.log("✅ Rate limit check passed, starting to scrape watchlist...")
     let options_selected = options;
 
     if (options && !('IMDBID' in options))
@@ -159,7 +160,8 @@ export const getUserLists = async ({
         errorMessage: rateCheck.message || 'Rate limit exceeded',
       };
     }
-
+    
+    console.log("✅ Rate limit check passed, starting to scrape user lists...")
     let options_selected = options;
 
     if (options && !('posters' in options))
@@ -249,6 +251,7 @@ export const getListFilms = async ({
       };
     }
 
+    console.log("✅ Rate limit check passed, starting to scrape list...")
     let options_selected = options;
 
     if (options && !('IMDBID' in options))
@@ -334,6 +337,7 @@ export const searchFilm = async ({
         errorMessage: rateCheck.message || 'Rate limit exceeded',
       };
     }
+    console.log("✅ Rate limit check passed, starting to scrape search results...")
 
     let options_selected = options;
 
